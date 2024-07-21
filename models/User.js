@@ -21,18 +21,17 @@ const userSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
-  confirmPassword:{
-     type: String,
-   
+  confirmPassword: {
+    type: String,
   },
   accountType: {
     type: String,
     enum: ["Admin", "Student", "Instructor"],
     required: true,
   },
-  contactNumber:{
-    type:Number,
-    required:true,
+  contactNumber: {
+    type: Number,
+    required: true,
   },
   additionalDetails: {
     type: mongoose.Schema.Types.ObjectId,
@@ -45,13 +44,19 @@ const userSchema = new mongoose.Schema({
       ref: "Course",
     },
   ],
-  
+
   courseProgress: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "CourseProgress",
     },
   ],
+  token: {
+    type: String,
+  },
+  resetPasswordExpires: {
+    type: Date,
+  },
 });
 
 module.exports = mongoose.model("User", userSchema);

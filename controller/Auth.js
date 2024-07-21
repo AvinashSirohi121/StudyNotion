@@ -202,7 +202,7 @@ exports.login = async (req, res, next) => {
       let payload = {
         email: user.email,
         id: user._id,
-        role: user.accountType,
+        accountType: user.accountType,
       };
       let token = await jwt.sign(payload, process.env.JWT_SECRET, {
         expiresIn: "2h",
@@ -240,7 +240,44 @@ exports.login = async (req, res, next) => {
 //changePassword
 exports.changePassword = async(req,res,next)=>{
   try{
-    const {email , oldPass , newPass , confirmNewPass} = req.body;
+    const {id , oldPass , newPass , confirmNewPass} = req.body;
+    
+    if(!email || !oldPass || !newPass || !confirmNewPass){
+      return res.status(400).json({
+        success: false,
+        message: "Please provide all details",
+      });
+    }
+    if(newPass !== confirmNewPass){
+      return res.status(400).json({
+        success: false,
+        message: "New Password and Confirm New Password does not match",
+      });
+    }
+
+    let existingUser = await User.findById({email});
+    if(existingUser){
+      if(oldPass !== existingUser.password){
+          return res.status(400).json({
+            success:false,
+            message:"Incorrect old password"
+          })
+      }
+      let newhashPass = await bcrypt.hash(password,10);
+      const updatedUser = await User.findByIdAndUpdate(id,{ password: newhashPass }, { new: true } ).populate("additionalDetails");
+      return res.status(200).json({
+        success:true,
+        message:"Password changed successfully",
+        updatedUser
+      })
+
+
+    }else{
+      return res.status(400).json({
+        success: false,
+        message: "User does not exists",
+      });
+    }
     
 
   }catch(error){
