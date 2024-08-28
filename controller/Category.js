@@ -55,3 +55,48 @@ exports.showAllCategory = async (req, res, next) => {
     });
   }
 };
+
+
+exports.categoryPageDetails = async(req,res)=>{
+  try {
+
+     const {categoryId} = req.body;
+     // get courses for selected categoryId
+     const selectedCategoryCourses = await Category.findById(categoryId).populate("courses").exec();
+     console.log("Selected Category Courses =>",selectedCategoryCourses);
+
+     if(!selectedCategoryCourses){
+      return res.status(404).json({
+        success:false,
+        message:"Unable to find courses for the selected category"
+      })
+     }
+
+
+     // get courses for some other categories
+     const differentCategoryCourses = await Category.find({_id:{ne:categoryId}}).populate("courses").exec();
+     console.log("DifferentCategoryCourses =>",differentCategoryCourses)
+
+     // how to find top selling courses
+
+     return res.status(200).json({
+      success:true,
+      message:"Category Course Data",
+      data:{
+        selectedCategoryCourses,
+        differentCategoryCourses
+      }
+     })
+
+    
+  } catch (error) {
+    console.log("Error in Category Page Details =>",error)
+    console.log("Error in Category Page Details =>",error.message);
+
+    return res.status(500).json({
+      success:false,
+      message:"Error in category page Details",
+      error:error.message
+    })
+  }
+}
