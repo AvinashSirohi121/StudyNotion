@@ -2,7 +2,7 @@ const mailSender = require("../utils/mailSender");
 require("dotenv").config();
 
 
-exports.contactus = async(req,res)=>{
+exports.contactUs = async(req,res)=>{
     try{
 
         const {mobileNo,email,firstName,lastName,message}= req.body;
