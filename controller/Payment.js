@@ -144,7 +144,7 @@ exports.verifySignature = async(req,res)=>{
 
             const emailResponse = await mailSender(
                         enrolledStudent.email,
-                        "Conguralation from Coide Help",
+                        "Conguralation from Code Help",
                         "Conguralation, you are onboarded into new COurse");
 
             console.log("Email Response =>",emailResponse);    
