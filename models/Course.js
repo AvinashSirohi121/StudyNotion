@@ -54,6 +54,9 @@ const courseSchema = new mongoose.Schema({
       ref: "User",
     },
   ],
+  tag:{
+    type:[String],
+  }
 });
 
 module.exports = mongoose.model("Course", courseSchema);

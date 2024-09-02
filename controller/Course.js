@@ -1,23 +1,26 @@
 const Course = require("../models/Course");
-const Tag = require("../models/Tags")
+const Category = require("../models/Category")
+const User = require("../models/User");
 const uploadImageToCloudinary = require("../utils/imageUploder");
 
 require('dotenv').config();
 
-exports.createCourses = async (req, res, next) => {
+exports.createCourse = async (req, res, next) => {
   try {
     //get all data
-    const { courseName, courseDescription, whatYouWillLearn, price, tag } =
-      req.body;
-    // get file
-    const { thumbnail } = req.files;
+    const { courseName, courseDescription, whatYouWillLearn, price, tag, category,status,instructions } = req.body;
+    const userId = req.user.id;
+    
+    // Get thumbnail image from request files
+		const thumbnail = req.files.thumbnailImage;
     // validation
     if (
       !courseName ||
       !courseDescription ||
       !whatYouWillLearn ||
       !price ||
-      !tag
+      !tag||
+			!category
     ) {
       return res.status(400).json({
         success: false,
@@ -30,10 +33,13 @@ exports.createCourses = async (req, res, next) => {
         message: "Provide thumbnail",
       });
     }
-    // instructor level validation
-    const userId = req.user._id;
+    if(!status || status == undefined){
+      status="Draft";
+    }
 
-    let instructorDetails = await User.findById(userId);
+    // instructor level validation
+  
+    const instructorDetails = await User.findById(userId,{accountType:"Instructor"});
     console.log("Instructor Details =>", instructorDetails);
 
     if (!instructorDetails) {
@@ -42,17 +48,18 @@ exports.createCourses = async (req, res, next) => {
         message: "Instructor Details not found",
       });
     }
+
     // tag validation
-    let tagDetails = await Tag.findById(tag);
-    if(!tagDetials){
-       return res.status(400).json({
+    const categoryDetails = await Category.findById(category);
+    if(!categoryDetails){
+       return res.status(404).json({
          success: false,
-         message: "tag Detials not found",
+         message: "Category Detials not found",
        });
     }
     //  Image uploaded to cloudinary
 
-    let thumbNailImage = await uploadImageToCloudinary(thumbnail,process.env.FOLDER_NAME);
+    const thumbNailImage = await uploadImageToCloudinary(thumbnail,process.env.FOLDER_NAME);
     console.log("thumbNailImage  =>", thumbNailImage);
     // create course entry in DB
     let newCourse = await Course.create({
@@ -61,21 +68,24 @@ exports.createCourses = async (req, res, next) => {
       instructor: instructorDetails._id,
       whatYouWillLearn: whatYouWillLearn,
       price: price,
-      tag: tagDetails._id,
+      tag: tag,
+      category:categoryDetails._id,
       thumbNail: thumbNailImage.secure_url,
+      status:status,
+      instructions:instructions,
     });
 
     // add course entry in user schema of instructor
     await User.findByIdAndUpdate(
       {_id:instructorDetails._id},
       { $push:{courses:newCourse._id}},
-      {new:TextTrackCueList}
+      {new:true}
     );
 
     // add course entry in tag
 
-    await Tag.findByIdAndUpdate(
-      {_id:tag},
+    await Category.findByIdAndUpdate(
+      {_id:category},
       {$push:{courses:newCourse._id}},
       {new:true})
 
@@ -96,25 +106,30 @@ exports.createCourses = async (req, res, next) => {
   }
 };
 
-exports.showAllCourses = async (req, res, next) => {
+exports.getAllCourses = async (req, res, next) => {
   try {
-    let allCourses = await Course.find(
-      {},
-      { courseName: true, courseDescription: true, courseContent: true }
-    );
+    const allCourses = await Course.find({},
+      { courseName: true, 
+        courseDescription: true, 
+        courseContent: true,
+        price:true,
+        thumbNail:true,
+        instructor:true,
+       }
+    ).populate("instructor").exec();
     console.log("All Courses Data =>", allCourses);
 
     return res.status(200).json({
-      success: false,
+      success: true,
       message: "All courses data fetched successfully",
-      allCourses,
+      data:allCourses,
     });
   } catch (error) {
     console.log("Error in showing All courses =>", error);
     console.log("Error in showing All courses =>", error.message);
     return res.statud(500).json({
       success: false,
-      message: "Error while showing All courses",
+      message: "Error while getting All courses",
       error: error.message,
     });
   }
@@ -130,7 +145,7 @@ exports.getCourseDetails = async(req,res)=>{
       })
     }
     
-    let courseDetails = await Course.findById({_id:courseId}).populate({path:"instructor",populate:{path:"additionalDetails"}}).populate("category").populate("ratingAndReview").populate({path:"courseContent",populate:{path:"subSection"}}).exec();
+    const courseDetails = await Course.findById({_id:courseId}).populate({path:"instructor",populate:{path:"additionalDetails"}}).populate("category").populate({path:"courseContent",populate:{path:"subSection"}}).exec();
     console.log("CourseDetails =>",courseDetails);
 
     if(!courseDetails){

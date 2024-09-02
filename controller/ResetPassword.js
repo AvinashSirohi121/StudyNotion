@@ -17,17 +17,17 @@ exports.resetPasswordToken = async (req, res, next) => {
     if (!user) {
       return res.status(400).json({
         success: false,
-        message: "User not registered",
-      });
+				message: `This Email: ${email} is not Registered With Us Enter a Valid Email `,
+			 });
     }
     //generate token
-    let token = crypto.randomUUID();
+    const token = crypto.randomBytes(20).toString("hex");
     //update the user by adding token and expiry time
     let updatedDetails = await User.findOneAndUpdate(
       { email: email },
       {
         token: token,
-        resetPasswordExpires: Date.now() + 10 * 60 * 1000,
+        resetPasswordExpires: Date.now() +3600000,
       },
       { new: true }
     );
@@ -46,7 +46,7 @@ exports.resetPasswordToken = async (req, res, next) => {
     //return response
     return res.status(200).json({
       success: true,
-      message: "Reset Password token email sent successfully",
+      message: "Reset Password Token Email Sent Successfully, Please Check Your Email to Continue Further",
     });
   } catch (error) {
     console.log("Error in reset Password Token =>", error);
@@ -74,8 +74,8 @@ exports.resetPassword = async (req, res, next) => {
     if (password != confirmPassword) {
       return res.status(400).json({
         success: false,
-        message: "Password does not match",
-      });
+				message: "Password and Confirm Password Does not Match",
+			});
     }
 
     // check password
@@ -93,12 +93,11 @@ exports.resetPassword = async (req, res, next) => {
     if (userDetails.resetPasswordExpires < Date.now()) {
       return res.status(400).json({
         success: false,
-        message:
-          "Token expires, kindly again do the reset password transaction",
+        message:"Token expires, kindly again do the reset password transaction",
       });
     }
     // has the password
-    let hashedPassword = bcrypt.hash(password, 10);
+    let hashedPassword = await bcrypt.hash(password, 10);
 
     // update the password
 
@@ -113,7 +112,7 @@ exports.resetPassword = async (req, res, next) => {
     return res.status(200).json({
       success: true,
       message: "Password reset successfully",
-      updatedUser,
+      data:updatedUser,
     });
   } catch (error) {
     console.log("Error in reset Password =>", error);

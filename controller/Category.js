@@ -12,7 +12,7 @@ exports.createCategory = async (req, res, next) => {
     }
     // create entry in DB
 
-    let categoryDetails = await Category.create({
+    const categoryDetails = await Category.create({
       name: name,
       description: description,
     });
@@ -34,7 +34,7 @@ exports.createCategory = async (req, res, next) => {
   }
 };
 
-exports.showAllCategory = async (req, res, next) => {
+exports.showAllCategories = async (req, res, next) => {
   try {
 
     let allCategory = await Category.find({},{name:true,description:true});
@@ -46,11 +46,11 @@ exports.showAllCategory = async (req, res, next) => {
         });
     
   } catch (error) {
-    console.log("Error in showAllCategory =>", error);
-    console.log("Error in showAllCategory =>", error.message);
+    console.log("Error in showAllCategories =>", error);
+    console.log("Error in showAllCategories =>", error.message);
     return res.status(500).json({
       success: false,
-      message: "Error while showAllCategory",
+      message: "Error while showAllCategories",
       error: error.message,
     });
   }
@@ -83,8 +83,8 @@ exports.categoryPageDetails = async(req,res)=>{
       success:true,
       message:"Category Course Data",
       data:{
-        selectedCategoryCourses,
-        differentCategoryCourses
+        selectedCategoryCourses:selectedCategoryCourses,
+        differentCategoryCourses:differentCategoryCourses
       }
      })
 

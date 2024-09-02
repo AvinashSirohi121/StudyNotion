@@ -11,17 +11,19 @@ exports.auth = async (req, res, next) => {
       req.cookies.token ||
       req.body.token ||
       req.header("Authorization").replace("Bearer ", "");
+
+
     if (!token) {
-      return res.status(400).json({
+      return res.status(404).json({
         success: false,
         message: "Token is missing",
       });
     }
     // verifying the token
     try {
-      let decode = await jwt.verify(token, process.env.JWT_SECRET);
+      const decode = await jwt.verify(token, process.env.JWT_SECRET);
       console.log("Decoded token =>", decode);
-      req.user = decode;
+      req.user = decode; //<- putting token in req.user , there also in token we have set userId
     } catch (error) {
       return res.status(401).json({
         sucess: false,

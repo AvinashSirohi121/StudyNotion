@@ -2,7 +2,7 @@ const RatingAndReview  = require("../models/RatingAndReview");
 const Course  = require("../models/Course");
 
 
-exports.createRatings =async(req,res)=>{
+exports.createRating =async(req,res)=>{
     try {
         const {rating,review,courseId} = req.body;
         const userId = req.user.id;
@@ -43,12 +43,12 @@ exports.createRatings =async(req,res)=>{
 
         const ratingAndReview = await RatingAndReview.create({rating,review,course:courseId,user:userId});
         // attach the rating to course
-        let updatedCourseDetails = await Course.findByIdAndUpdate({_id:courseId},{
+        const updatedCourseDetails = await Course.findByIdAndUpdate({_id:courseId},{
             $push:{
                 ratingAndReview:ratingAndReview._id,
             }},
             {new:true});
-
+        console.log("Updated Course Details =>",updatedCourseDetails);
         // return res
 
         return res.status(200).json({
@@ -70,26 +70,27 @@ exports.createRatings =async(req,res)=>{
     }
 }
 
-exports.getAverageRatings =async(req,res)=>{
+exports.getAverageRating =async(req,res)=>{
     try {
         const {courseId} = req.body;
 
         const result = await RatingAndReview.aggregate(
-            { $match:{ course:new mongoose.Types.ObjectId(courseId),}},
+            { $match:{ course:new mongoose.Types.ObjectId(courseId)}},
             { $group:{ _id:null,averageRating:{$avg:"$rating"}}});
 
             if(result.length>0){
                 return res.status(200).json({
                     success:true,
                     message:"Rating of the give course",
-                    averageRating:result[0].averageRating
+                    data:{averageRating:result[0].averageRating}
                 })
             }
             // if not ratingReview exist;
 
             return res.status(200).json({
                 success:true,
-                message:"Average Ratingis 0 , not rating is given till now"
+                message:"Average Ratingis 0 , not rating is given till now",
+                data:{averageRating:0}
             })
         
     } catch (error) {
@@ -104,11 +105,12 @@ exports.getAverageRatings =async(req,res)=>{
     }
 }
 
-exports.getAllRatings =async(req,res)=>{
+exports.getAllRating =async(req,res)=>{
+    
     try {
         
         const allReviews =await RatingAndReview.find({}).sort({rating:"desc"}).populate({path:"user",select:"firstName,lastName,email,image"}).populate({path:"course",select:"CourseName"}).exec(); 
-   
+        console.log("All Reviews =>",allReviews);
         return res.status(200).json({
             success:true,
             message:"All reviews fetched successfully",

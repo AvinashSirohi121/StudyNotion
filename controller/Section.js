@@ -23,7 +23,9 @@ exports.createSection = async(req,res,next)=>{
           { _id: courseId },
           { $push: { courseContent :newSection._id} },
           {new:true}
-        ).populate("section");
+        ).populate({path:"courseContent",populate:{
+            path:"subSection"
+        }}).exec();
 
         // const updatedCourseDetails = await Course.findByIdAndUpdate(
         //         courseId,
@@ -74,7 +76,7 @@ exports.updateSection = async(req,res,next)=>{
             })
         }
         //update Section
-        let updatedSection = await Section.findByIdAndUpdate(
+        const updatedSection = await Section.findByIdAndUpdate(
           { _id: sectionId },
           { sectionName: newSectionName },
           {new:true}
@@ -82,7 +84,8 @@ exports.updateSection = async(req,res,next)=>{
        
         return res.status(200).json({
             success:true,
-            message:"Section updated successfully"
+            message:"Section updated successfully",
+            data:updatedSection
         })
 
 
@@ -111,13 +114,19 @@ exports.deleteSection = async(req,res)=>{
 
         await Section.findByIdAndDelete(sectionId);
 
+        return res.status(200).json({
+            succes:true,
+            message:"Section Deleted successfully"
+        })
+
     }catch(error){
         console.log("Error while deleting Section =>",error)
         console.log("Error while deleting Section =>",error.message)
 
         return res.status(400).json({
             success:false,
-            message:"Error while deleting Section"
+            message:"Error while deleting Section",
+            error:error.message
         })
 
     }
