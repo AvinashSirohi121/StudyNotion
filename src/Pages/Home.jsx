@@ -5,12 +5,18 @@ import HighlightText from '../components/core/HomePage/HighlightText';
 import CTAButton from "../components/core/HomePage/Button";
 import Banner from  "../assets/Images/banner.mp4"
 import CodeBlocks from '../components/core/HomePage/CodeBlocks';
+import TimeLineSection from '../components/core/HomePage/TimeLineSection';
+import LearningLanguageSection from '../components/core/HomePage/LearningLanguageSection';
+import InstructorSection from '../components/core/HomePage/InstructorSection';
+import Footer from "../components/core/HomePage/Footer"
+import "../App.css"
+
 const Home = () => {
   return (
     <div>
         {/*Section 1*/}
 
-        <div className='group relative mx-auto flex flex-col w-11/12 items-center text-white justify-between'>
+        <div className='group mx-auto flex flex-col w-11/12 items-center text-white justify-between'>
 
             <Link to={"/singup"}>
             <div className=' mt-16 p-1 mx-auto rounded-full bg-richblack-800 font-bold text-richblack-200 transition duration-200 hover:scale-95 w-full'>
@@ -18,11 +24,20 @@ const Home = () => {
                     <p>Become an Instructor</p> <FaArrowRight/>
                 </div>
             </div>
+            
+        
+                  
+                
+            
             </Link>
+
+        
+
+            
 
             <div className='text-center text-4xl font-semibold mt-6'>
                 Empower Your Future with
-                <HighlightText text={"Coding Skills"}/>
+                <HighlightText text={"Coding Skills"} />
             </div>
 
             <div className='w-[90%] text-center text-lg  text-richblack-300 mt-4'>With our online courses you can learn at your pace, from anywhere in the world and get access to a <br/>
@@ -98,9 +113,57 @@ const Home = () => {
             </div>
 
         </div>
+
+        
         {/*Section 2*/}
+         <div className='bg-pure-greys-5 text-richblack-700'>
+            <div className='homepage-bg h-[310px]'>
+                <div className='w-11/12 max-w-maxContent flex flex-col items-center gap-5 mx-auto'>
+
+                    <div className='h-[200px]'></div>
+                    <div className='flex flex-row gap-7 text-white'>
+
+                        <CTAButton active={"true"} linkto={"/signup"} >  
+                            <div className='flex items-center gap-3'>Explore full cataloge <FaArrowRight/></div>  
+                        </CTAButton>    
+                        <CTAButton active={"false"} linkto={"/signup"} >  
+                            <div className='flex items-center gap-3'>Learn More</div>  
+                        </CTAButton>    
+                    </div>          
+                </div>
+            </div>
+
+            <div className='w-11/12 mx-auto max-w-maxContent flex flex-col items-center justify-between gap-5'>
+                <div className='flex flex-row gap-7 mb-10 mt-[95px]'>
+                    <div className='text-4xl font-semibold w-[45%] mr-[40px]'>
+                        Get the skills you need for a 
+                        <HighlightText text={"Job that is in demand"}/>
+                    </div>
+
+                    <div className='flex flex-col gap-10 w-[40%] items-start ml-[40px]'>
+                        <div className=' text-[16px] '>
+                            The morden StudyNotion is the dictates its own terms. Today , to be a competitive sepecalist requires more then professional skills.
+                        </div>
+                        <CTAButton  active={"true"} linkto={"/signup"}>Learn more</CTAButton>
+                    </div>
+                </div>
+
+                <TimeLineSection />
+                <LearningLanguageSection/>
+            </div>
+
+           
+         </div>
         {/*Section 3*/}
+        <div className='w-11/12 max-w-maxContent mx-auto flex flex-col items-center justify-between first-letter:bg-richblack-900 text-white gap-8 mt-[50p ] mb-16'>
+               <InstructorSection/>
+
+               <h2 className='text-center text-4xl text-semibold mt-10'>Reviews from other learners</h2>
+               {/* <ReviewSlider /> */}
+        </div>
+
         {/* Footer  */}
+        <Footer />
     </div>
   )
 }

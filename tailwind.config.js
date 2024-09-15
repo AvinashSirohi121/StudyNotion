@@ -7,6 +7,9 @@ module.exports = {
       "edu-sa": ["Edu SA Beginner", "cursive"],
       mono: ["Roboto Mono", "monospace"],
     },
+    
+     
+    
     colors: {
       white: "#fff",
       black: "#000",
@@ -52,6 +55,9 @@ module.exports = {
         700: "#053B48",
         800: "#022B32",
         900: "#001B1D",
+        1000:"#5433FF",
+        1100:"#20BDFF",
+        1200:"#A5FECB"
       },
       caribbeangreen: {
         5: "#C1FFFD",
@@ -123,11 +129,31 @@ module.exports = {
         800: "#171717",
         900: "#141414",
       },
+      
     },
     extend: {
       maxWidth: {
         maxContent: "1260px",
         maxContentTab: "650px"
+      },
+      animation: {
+        // {...}
+        spin_right: 'spin_right 3s linear infinite',
+        spin_right_fast: 'spin_right 2s linear infinite',
+        spin_left: 'spin_left 3s linear infinite'
+      },
+      keyframes: {
+        // {...}
+        spin_right: {
+          '0%': { transform: 'rotate(0deg)' },
+          '50%': { transform: 'rotate(180deg)' },
+          '100%': { transform: 'rotate(360deg)' },
+        },
+        spin_left: {
+          '0%': { transform: 'rotate(0deg)' },
+          '50%': { transform: 'rotate(-180deg)' },
+          '100%': { transform: 'rotate(-360deg)' },
+        }
       },
     },
   },
