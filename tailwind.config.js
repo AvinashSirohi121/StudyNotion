@@ -7,7 +7,16 @@ module.exports = {
       "edu-sa": ["Edu SA Beginner", "cursive"],
       mono: ["Roboto Mono", "monospace"],
     },
-    
+    screens: {
+      'sm': '300px',
+      // => @media (min-width: 576px) { ... }
+
+      'md': '720px',
+      // => @media (min-width: 960px) { ... }
+
+      'lg': '1240px',
+      // => @media (min-width: 1440px) { ... }
+    },
      
     
     colors: {
