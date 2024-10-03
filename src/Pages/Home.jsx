@@ -132,7 +132,10 @@ const Home = () => {
                 <div className='flex lg:flex-row md:flex-col sm:flex-col items-center gap-7 mb-10'>
                     <div className='text-4xl font-semibold w-[45%] lg:mr-[40px]'>
                         Get the skills you need for a 
-                        <HighlightText text={"Job that is in demand"}/>
+                        {/* <HighlightText text={"Job that is in demand"} fromColor={`blue-1100`} toColor={`blue-1200`}/> */}
+                        <HighlightText text={"Job that is in demand"} fromColor=
+                        "blue-1100" toColor="blue-1200"/>
+
                     </div>
 
                     <div className='lg:items-start flex flex-col md:flex-col md:items-center gap-10 w-[40%] items-start lg:ml-[40px]'>

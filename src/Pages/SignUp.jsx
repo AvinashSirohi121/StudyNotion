@@ -1,6 +1,6 @@
 import React from 'react'
 import HighlightText from '../components/core/HomePage/HighlightText'
-import loginImage from "../assets/Images/Mobile login-bro.svg"
+import loginImage from "../assets/Images/MobileSignUpVector.svg"
 import CTAButton from "../components/core/HomePage/Button"
 import { Link } from 'react-router-dom'
 import { AiFillStar } from "react-icons/ai";
@@ -11,7 +11,7 @@ const SignUp = () => {
         <div className='text-white w-10/12 mx-auto mt-16 justify-center flex overflow-x-hidden gap-2'>
            {/* Left Part*/}
             <div className='flex flex-col  p-2'>
-                <h2 className='text-4xl'>Join the millions learning to code  <br/> with <HighlightText text={"Studynotion"} /> for free</h2>
+                <h2 className='text-4xl'>Join the millions learning to code  <br/> with <HighlightText text={"StudyNotion"} /> for free</h2>
                 <p className='lg:text-lg md:text-lg sm:text-sm mb-4 mt-2 italic '>Build skills for today, tomorrow, and beyond. <br/>
                 <HighlightText className="italic" text={"Education to future-proof your career."}/> </p>
 

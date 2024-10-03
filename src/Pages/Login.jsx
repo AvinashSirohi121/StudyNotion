@@ -1,6 +1,6 @@
 import React from 'react'
 import HighlightText from '../components/core/HomePage/HighlightText'
-import SignUpImage from "../assets/Images/MobileSignUpVector.svg"
+import SignUpImage from "../assets/Images/Mobile login-bro.svg"
 import CTAButton from "../components/core/HomePage/Button"
 import { Link } from 'react-router-dom'
 import { AiFillStar } from "react-icons/ai";
