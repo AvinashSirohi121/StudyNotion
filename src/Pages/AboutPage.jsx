@@ -1,6 +1,7 @@
 import React from 'react'
 import HighlightText from '../components/core/HomePage/HighlightText'
 import aboutImage1  from "../assets/Images/aboutUslanding.webp"
+
 import journey from "../assets/Images/ourjourney.svg"
 
 import Footer from "../components/core/HomePage/Footer"
@@ -49,7 +50,8 @@ const AboutPage = () => {
                 <p className='lg:block md:block sm:hidden text-richblack-400'>As experienced educators ourselves, we witnessed firsthand the limitations and challenges of traditional education systems. We believed that education should not be confined to the walls of a classroom or restricted by geographical boundaries. We envisioned a platform that could bridge these gaps and empower individuals from all walks of life to unlock their full potential.</p>
             </div>
             <div>
-                <img src={journey}  className='bg-richblack-900 scale-[80%] '/>
+                
+                <img src={journey}  className=' scale-[80%] '/>
             </div>
     </div>
 

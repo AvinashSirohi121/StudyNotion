@@ -11,6 +11,17 @@ html, body{
 .homepage-bg{
     background:url("../src/assets/Images/bghome.svg")
 }
+/* For Chrome, Safari, Edge, and Opera */
+.no-arrows::-webkit-outer-spin-button,
+.no-arrows::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* For Firefox */
+.no-arrows[type=number] {
+    -moz-appearance: textfield;
+}
 
 
 
