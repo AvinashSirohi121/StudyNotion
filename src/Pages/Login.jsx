@@ -1,11 +1,68 @@
-import React from 'react'
+import React,{useState} from 'react'
 import HighlightText from '../components/core/HomePage/HighlightText'
 import SignUpImage from "../assets/Images/Mobile login-bro.svg"
 import CTAButton from "../components/core/HomePage/Button"
 import { Link } from 'react-router-dom'
 import { AiFillStar } from "react-icons/ai";
+import useValidation from '../services/hooks/useValidation'
+import { IoEyeOff } from "react-icons/io5";
+import { IoEye } from "react-icons/io5";
+import toast from 'react-hot-toast'
 
 const Login = () => {
+    const {validate,validateAll,setErrors,errors} = useValidation();
+    const [viewPassword,setViewPassword] = useState(false);
+    const [data,setData] = useState({
+        email:"",
+        password:"",
+        
+    })
+
+    const handleChange =(e)=>{
+        const {name,value} = e.target;
+        const error = validate(name,value,data);
+
+        setErrors((prevErrors) => ({
+            ...prevErrors,
+            [name]: error,
+          }));
+         
+          // Update data state
+          setData((prevData) => ({
+              ...prevData,
+              [name]: value,
+          }));
+    }
+
+    const togglePassword=()=>{
+        setViewPassword(!viewPassword);
+    }
+    const login=()=>{
+        //const newErrors = validateAll(data);
+
+        if (data.email !="" && data.password !="") {
+          console.log("Form is valid and ready to submit!", data);
+          toast.loading("Loading",{duration:3000})
+          setTimeout(()=>{
+                toast.success("Message Send successfully.")
+                setData({
+                   email:"",
+                   password:""
+                  })
+                  setErrors({})
+            
+                  console.log("Data =>",data)
+                  console.log("Error =>",errors)
+          },3000)
+    
+         
+        } else {
+          console.log("Form has errors.");
+          console.log("Data =>",data," Errors =>",errors);
+          toast.error("Kindly fill all the details")
+        }
+    }
+
   return (
     <div className='text-semibold'>
         <div className='text-white w-10/12 mx-auto mt-16 justify-center flex flex-row-reverse overflow-x-hidden gap-2'>
@@ -20,21 +77,44 @@ const Login = () => {
 
                     <div className='flex flex-col md:mb-2 sm:mb-2 lg:mb-4'>
                             <label className='flex text-sm'>Email Address <AiFillStar className='text-[5px]  text-pink-1000'/></label>
-                            <input className='h-[40px] rounded-lg bg-richblack-800 pl-2 border-b border-richblack-400 outline-none mt-1' 
+                            <input 
+                            type="text"
+                            name="email"
+                            value={data.email}
+                            onChange={(e)=>handleChange(e)}
+                            className='h-[40px] rounded-lg bg-richblack-800 pl-2 border-b border-richblack-400 outline-none mt-1' 
                             placeholder='Enter email address'/>
+                             {errors.email && <span className="text-[10px]  text-pink-1000">{errors.email}</span>}
                     </div>
                     <div className='flex flex-col md:mb-2 sm:mb-2 lg:mb-10'>
                    
                             <label className='flex text-sm'>Password <AiFillStar className='text-[5px]  text-pink-1000'/></label>
-                            <input className='h-[40px]    rounded-lg bg-richblack-800 pl-2 border-b border-richblack-400 outline-none mt-1' 
+                            <div className="flex relative">
+                            <input 
+                             type={viewPassword ? "text":"password"}
+                             name="password"
+                             value={data.password}
+                             onChange={(e)=>handleChange(e)}
+                            className='h-[40px] w-full    rounded-lg bg-richblack-800 pl-2 border-b border-richblack-400 outline-none mt-1' 
                             placeholder='Enter password'/>
+                            <button 
+                                onClick={togglePassword}
+                                className="absolute right-2 top-4 ">
+                                 {viewPassword ?  <IoEye/> :<IoEyeOff/>}   
+                               
+                            </button>
+                            </div>
+                            {/* {errors.password && <span className="text-[10px]  text-pink-1000">{errors.password}</span>} */}
                         
                     </div>
 
                    
                     
                     <div className='mt-5 flex items-center justify-center'>
-                        <CTAButton active={"true"} linkto={"/signup"} className="">Login</CTAButton>
+                        {/* <CTAButton active={"true"} linkto={"/signup"} className="">Login</CTAButton> */}
+                        <div onClick={()=>login()}  >
+                            <CTAButton active={"true"} className="">Login</CTAButton>
+                        </div>
                     </div>
 
                 </div>

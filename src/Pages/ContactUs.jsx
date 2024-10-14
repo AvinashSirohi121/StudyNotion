@@ -8,9 +8,12 @@ import { AiFillStar } from "react-icons/ai";
 import aboutImage2 from "../assets/Images/aboutus_mini_image.svg"
 import countryCode from "../data/countrycode.json"; 
 import toast from 'react-hot-toast'
+import useValidation from "../services/hooks/useValidation"
 
 const ContactUs = () => {
-    const [errors, setErrors] = useState({}); // To store validation errors
+
+    const { validate, validateAll, errors, setErrors } = useValidation();
+    //const [errors, setErrors] = useState({}); // To store validation errors
     
     const [data,setData] = useState({
         fName:"",
@@ -23,7 +26,8 @@ const ContactUs = () => {
 
   const handleChange = (e) => {
         const {name,value} = e.target;
-        const error = validate(name, value);
+        const error = validate(name, value, data);
+        console.log("Name =>",name," Value =>",value," Error =>",error);
 
         // Update errors state if there's an error
         setErrors((prevErrors) => ({
@@ -38,60 +42,9 @@ const ContactUs = () => {
         }));
     };
 
-  const validate = (name, value) => {
-    let error = "";
-
-    // Validation logic
-    switch (name) {
-      case "fName":
-      case "lName":
-        if (!/^[a-zA-Z]+$/.test(value)) {
-          error = `This field must contain alphabets only`;
-        }
-        if (!value) {
-          error = "This field cannot be empty.";
-        }
-        break;
-      case "email":
-        if (!/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(value)) {
-          error = "Please enter a valid email address.";
-        }
-        if (!value) {
-          error = "EMail cannot be empty.";
-        }
-        break;
-      case "mobile":
-        if (!/^\d+$/.test(value)) {
-          error = "Mobile number must contain only numbers.";
-        }
-        if (value.length < 7 || value.length > 15) {
-          error = "Mobile number must be between 7 and 15 digits.";
-        }
-        if (!value) {
-          error = "Mobile cannot be empty.";
-        }
-        break;
-      case "message":
-        if (!value) {
-          error = "Message cannot be empty.";
-        }
-        break;
-      default:
-        break;
-    }
-    return error;
-  };
-
-
+  
   const sendMessage =()=>{
-    const newErrors = {};
-    for (let key in data) {
-      const error = validate(key, data[key]);
-      if (error) {
-        newErrors[key] = error;
-      }
-    }
-    setErrors(newErrors);
+    const newErrors = validateAll(data);
 
     if (Object.keys(newErrors).length === 0) {
       console.log("Form is valid and ready to submit!", data);
