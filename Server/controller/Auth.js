@@ -53,7 +53,7 @@ exports.sendotp = async (req, res, next) => {
     // send OTP
     res.status(200).json({
       success: true,
-      message: "OTP send successfully",
+      message: "OTP send successfully, Kindly check your email",
       otp: otpgenerated,
     });
   } catch (error) {
@@ -299,7 +299,7 @@ exports.changePassword = async(req,res,next)=>{
 		}
 
      // Update password
-		const encryptedPassword = await bcrypt.hash(newPassword, 10);
+		const encryptedPassword = await bcrypt.hash(newPass, 10);
 		const updatedUserDetails = await User.findByIdAndUpdate(
 			req.user.id,
 			{ password: encryptedPassword },
