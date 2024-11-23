@@ -2,7 +2,7 @@ import React,{useState} from 'react'
 import HighlightText from '../components/core/HomePage/HighlightText'
 import loginImage from "../assets/Images/MobileSignUpVector.svg"
 import CTAButton from "../components/core/HomePage/Button"
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { AiFillStar } from "react-icons/ai";
 import useValidation from '../services/hooks/useValidation'
 import { IoEyeOff } from "react-icons/io5";
@@ -10,7 +10,9 @@ import { IoEye } from "react-icons/io5";
 import toast from 'react-hot-toast'
 import countryCode from "../data/countrycode.json"; 
 import { apiConnector } from '../services/apiconnector'
-import { categories } from '../services/api'
+import { authEndpoints } from '../services/api'
+import { useDispatch,useSelector } from 'react-redux'
+import { setLoading,setSignUpData,setToken } from '../slices/authSlice'
 
 const SignUp = () => {
     const {validate,validateAll,setErrors,errors} = useValidation();
@@ -18,6 +20,11 @@ const SignUp = () => {
     const [viewPassword,setViewPassword] = useState(false);
     const [viewConfirmPassword,setViewConfirmPassword] = useState(false);
     const [currentTab,setCurrentTab] = useState(accountTypes[0]);
+
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const {loading, token, signupData} = useSelector((state)=>state.auth)
+   
 
     
 
@@ -40,7 +47,7 @@ const SignUp = () => {
     const handleChange =(e)=>{
         const {name,value} = e.target;
         const error = validate(name,value,data);
-        console.log("Name =>",name," Value =>",value)
+       // console.log("Name =>",name," Value =>",value)
 
         setErrors((prevErrors) => ({
             ...prevErrors,
@@ -61,41 +68,63 @@ const SignUp = () => {
         }));
     }
 
-    const signUp = async()=>{
-        console.log("Data =>",data)
+    const signUp = async(email)=>{
+        console.log("Inside SignUp loading =>",loading," token =>",token)
+        if (loading) return;  // Prevent multiple API calls if already loading
+       // console.log("Data =>",data)
         const newErrors = validateAll(data);
 
         if (Object.keys(newErrors).length === 0) {
-          console.log("Form is valid and ready to submit!", data);
-          toast.loading("Loading",{duration:3000})
+         // console.log("Form is valid and ready to submit!", data);
+         // console.log("Callaing SEND_OTP_API =>",authEndpoints.SEND_OTP_API)
+          // Display loading toast and store its reference
+          const loadingToastId = toast.loading("Sending OTP...", { duration: 3000 });
+            try{
+                dispatch(setLoading(true));  // Set loading state in Redux
+                const result = await apiConnector("POST",authEndpoints.SEND_OTP_API,{email:data?.email||email});
+                console.log("Send OTP API result =>",result);
+                console.log("Send OTP API result =>",result?.data?.success," Type =>",typeof result?.data?.success);
 
-          const result = await apiConnector("POST",categories.SEND_OTP_API,{email:data.email});
-          console.log("Send OTP API result =>",result);
-          console.log("Send OTP API result =>",result?.data?.success," Type =>",typeof result?.data?.success);
-          if(result?.data?.success == true){
-            console.log("Inside success condition")
-            toast.success(`${result?.data?.message}`,{duration:3000});
-          }
-        //   setTimeout(()=>{
-        //         toast.success("Message Send successfully.")
-        //         setData({
-        //             fName:"",
-        //             lName:"",
-        //             email:"",
-        //             password:"",
-        //             confirmPassword:""
-        //           })
-        //           setErrors({})
-            
-        //           console.log("Data =>",data)
-        //           console.log("Error =>",errors)
-        //   },3000)
+                if(result?.data?.success){
+                    console.log("Inside success condition")
+                    toast.success(`${result?.data?.message}`,{duration:3000});
+                    dispatch(setSignUpData(data))
+                    navigate('/verify-email')
+                    
+                 }else {
+                    toast.error("Failed to send OTP. Please try again.");
+                  }
+
+            }catch(error){
+                toast.error(error?.response?.data?.message || "An error occurred", { duration: 3000 });
+            }finally{
+                dispatch(setLoading(false));  // Reset loading state in Redux
     
+                // Dismiss the loading toast if it's still active
+                toast.dismiss(loadingToastId);
+                console.log("last console , loading =>",loading)
+                // setting state with initial empty values
+                setData({
+                    fName:"",
+                    lName:"",
+                    email:"",
+                    password:"",
+                    confirmPassword:"",
+                    countryCode:"+91",
+                    mobile:"",
+                    accountType:currentTab
+                   })
+                   setErrors({})
+                //console.log("SingUpData =>",signupData)
+            }
+          
+         
+        
          
         } else {
           console.log("Form has errors.");
           console.log("Data =>",data," Errors =>",errors);
-          toast.error("Kindly fill all the details")
+          toast.error("Kindly fill all the details",{duration:3000})
         }
     }
     
@@ -238,9 +267,16 @@ const SignUp = () => {
                     
                     <div className='mt-5 flex items-center justify-center'>
                         {/* <CTAButton active={"true"} linkto={"/signup"} className="">Create Account</CTAButton> */}
-                        <div onClick={()=>signUp()}  >
+                        {/* <div onClick={()=>signUp()}  >
                             <CTAButton active={"true"} className="">Create Account</CTAButton>
-                        </div>
+                        </div> */}
+                        <button 
+                         className={`drop-shadow-xl text-center text-[13px] px-6 py-3 rounded-md font-bold bg-yellow-50 text-black ${loading ? 'opacity-50 cursor-not-allowed' : ''} hover:scale-95 transition-all duration-200`}
+
+                            onClick={signUp} 
+                            disabled={loading}>
+                            {loading ? "Creating Account..." : "Create Account"}
+                        </button>
                     </div>
 
                 </div>
