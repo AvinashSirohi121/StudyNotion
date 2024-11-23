@@ -8,17 +8,20 @@ const initalState = {
 }
 
 const authSlice = createSlice({
+    
     name:"auth",
     initialState:initalState,
     reducers:{
-        setToken(state,value){
-            state.token = value.payload;
+        
+        setToken(state,action){
+            state.token = action.payload;
         },
-        setLoading(state,value){
-            state.loading= value.payload
+        setLoading(state,action){
+            //console.log("Inside setLoading , state =>",state," Action =>",action)
+            state.loading= action.payload
         },
-        setSignUpData(state,value){
-            state.signupData= value.payload
+        setSignUpData(state,action){
+            state.signupData= action.payload
         }
     }
 })
