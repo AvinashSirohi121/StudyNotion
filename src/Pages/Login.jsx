@@ -2,12 +2,15 @@ import React,{useState} from 'react'
 import HighlightText from '../components/core/HomePage/HighlightText'
 import SignUpImage from "../assets/Images/Mobile login-bro.svg"
 import CTAButton from "../components/core/HomePage/Button"
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { AiFillStar } from "react-icons/ai";
 import useValidation from '../services/hooks/useValidation'
 import { IoEyeOff } from "react-icons/io5";
 import { IoEye } from "react-icons/io5";
 import toast from 'react-hot-toast'
+import { setLoading,setToken } from '../slices/authSlice'
+import { useDispatch,useSelector } from 'react-redux'
+import { login } from '../services/operations/authMethods'
 
 const Login = () => {
     const {validate,validateAll,setErrors,errors} = useValidation();
@@ -17,7 +20,9 @@ const Login = () => {
         password:"",
         
     })
-
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const {loading, token,} = useSelector((state)=>state.auth)
     const handleChange =(e)=>{
         const {name,value} = e.target;
         const error = validate(name,value,data);
@@ -37,30 +42,34 @@ const Login = () => {
     const togglePassword=()=>{
         setViewPassword(!viewPassword);
     }
-    const login=()=>{
-        //const newErrors = validateAll(data);
 
-        if (data.email !="" && data.password !="") {
-          console.log("Form is valid and ready to submit!", data);
-          toast.loading("Loading",{duration:3000})
-          setTimeout(()=>{
-                toast.success("Message Send successfully.")
-                setData({
-                   email:"",
-                   password:""
-                  })
-                  setErrors({})
-            
-                  console.log("Data =>",data)
-                  console.log("Error =>",errors)
-          },3000)
-    
-         
+    const handlePass=(e)=>{
+        const {name,value} = e.target;
+        setData((prevData) => ({
+            ...prevData,
+            [name]: value,
+        }));
+    }
+    const loginFN=()=>{
+        //const newErrors = validateAll(data);
+        console.log("Inside Login loading =>",loading," token =>",token)
+        if (loading) return;  // Prevent multiple API calls if already loading
+       // console.log("Data =>",data)
+        // const newErrors = validateAll(data);
+
+         if (data.email !=="" && data?.password !="") {
+            dispatch(login(data,navigate))
+            setData({
+                email:"",
+                password:""
+               })
+               setErrors({})
         } else {
           console.log("Form has errors.");
           console.log("Data =>",data," Errors =>",errors);
-          toast.error("Kindly fill all the details")
+          toast.error("Kindly fill all the details",{duration:3000})
         }
+        
     }
 
   return (
@@ -94,7 +103,7 @@ const Login = () => {
                              type={viewPassword ? "text":"password"}
                              name="password"
                              value={data.password}
-                             onChange={(e)=>handleChange(e)}
+                             onChange={(e)=>handlePass(e)}
                             className='h-[40px] w-full    rounded-lg bg-richblack-800 pl-2 border-b border-richblack-400 outline-none mt-1' 
                             placeholder='Enter password'/>
                             <button 
@@ -112,7 +121,7 @@ const Login = () => {
                     
                     <div className='mt-5 flex items-center justify-center'>
                         {/* <CTAButton active={"true"} linkto={"/signup"} className="">Login</CTAButton> */}
-                        <div onClick={()=>login()}  >
+                        <div onClick={()=>loginFN()}  >
                             <CTAButton active={"true"} className="">Login</CTAButton>
                         </div>
                     </div>
