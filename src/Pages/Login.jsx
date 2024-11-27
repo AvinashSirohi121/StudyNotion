@@ -22,7 +22,7 @@ const Login = () => {
     })
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const {loading, token,} = useSelector((state)=>state.auth)
+    const {loading, token} = useSelector((state)=>state.auth)
     const handleChange =(e)=>{
         const {name,value} = e.target;
         const error = validate(name,value,data);
