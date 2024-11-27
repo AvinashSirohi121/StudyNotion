@@ -1,7 +1,8 @@
 import { apiConnector } from "../apiconnector"
 import { authEndpoints } from '../api'
 import toast from 'react-hot-toast'
-import { setLoading,setLoginData,setSignUpData } from "../../slices/authSlice"
+import { setLoading,setLoginData,setSignUpData, setToken } from "../../slices/authSlice"
+import { setUser } from "../../slices/profileSlice"
 
 
 
@@ -109,13 +110,19 @@ export const login =(data,navigate)=>{
                email:data?.email,
                password:data?.password
             });
-            console.log("Login API result =>",result);
+            console.log("Login API result =>",result?.data?.data);
+            console.log("Login Token result =>",result?.data?.token);
             console.log("Login OTP API result =>",result?.data?.success," Type =>",typeof result?.data?.success);
 
             if(result?.data?.success){
                 console.log("Inside success condition")
                 toast.success(`${result?.data?.message}`);
                
+               
+                dispatch(setToken(result?.data?.token))
+                const userImage = result?.data?.data?.image || `https://api.dicebear.com/5.x/initials/svg?seed=${result?.data?.data?.firstName} ${result?.data?.data?.lastName}`
+                dispatch(setUser({ ...result?.data?.data, image: userImage }))
+                localStorage.setItem("token", JSON.stringify(result?.data?.token))
                 navigate('/dashboard')
                 
              }else {
