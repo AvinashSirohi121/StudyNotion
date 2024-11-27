@@ -1,19 +1,43 @@
-import React,{useState} from 'react'
+import React,{useState, useEffect} from 'react'
 import OtpInput from 'react-otp-input';
 import { BiArrowBack } from "react-icons/bi";
 import { RxCountdownTimer } from "react-icons/rx";
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import signUp from "./SignUp"
+import toast from 'react-hot-toast'
+import {sendOTP,signUP} from "../services/operations/authMethods"
+
 
 const VerifyEmail = () => {
     const [otp, setOtp] = useState('');
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const {signupData} = useSelector((state)=>state.auth);
+    const {signupData,loading} = useSelector((state)=>state.auth);
+
+    useEffect(() => {
+      // Only allow access of this route when user has filled the signup form
+      if (!signupData) {
+        navigate("/signup");
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    const resendOTP=()=>{
+      dispatch(sendOTP(signupData?.email));
+      toast.success("OTP is send again on email Id, Kindly check")
+    }
+    const verifyOtp=()=>{
+      dispatch(signUP(signupData,otp,navigate))
+      setOtp('');
+    }
   return (
     <div className="min-h-[calc(100vh-3.5rem)] grid place-items-center">
-    <div className='className="max-w-[500px] p-4 lg:p-8'>
+       {loading ? (
+        <div>
+          <div className="spinner"></div>
+        </div>
+      ) : (
+       <div className='className="max-w-[500px] p-4 lg:p-8'>
     <h1 className="text-richblack-5 font-semibold text-[1.875rem] leading-[2.375rem]">
             Verify Email
           </h1>
@@ -38,7 +62,8 @@ const VerifyEmail = () => {
                             />
                         )}
                     />
-                <button  type="submit"
+                <button  
+                        onClick ={()=>verifyOtp()}
                         className="w-full bg-yellow-50 py-[12px] px-[12px] rounded-[8px] mt-6 font-medium text-richblack-900">
                     Verify Email</button>
               </div>
@@ -52,13 +77,14 @@ const VerifyEmail = () => {
             </Link>
             <button
               className="flex items-center text-blue-100 gap-x-2"
-            //   onClick={() => dispatch(sendOtp(signupData.email))}
+               onClick={() =>resendOTP()}
             >
               <RxCountdownTimer />
               Resend it
             </button>
           </div>
-        </div>
+        </div> 
+      )}
     </div>
   )
 }
