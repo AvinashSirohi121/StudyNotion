@@ -9,10 +9,10 @@ import { IoEyeOff } from "react-icons/io5";
 import { IoEye } from "react-icons/io5";
 import toast from 'react-hot-toast'
 import countryCode from "../data/countrycode.json"; 
-import { apiConnector } from '../services/apiconnector'
-import { authEndpoints } from '../services/api'
+
 import { useDispatch,useSelector } from 'react-redux'
 import { setLoading,setSignUpData,setToken } from '../slices/authSlice'
+import { sendOTP } from '../services/operations/authMethods'
 
 const SignUp = () => {
     const {validate,validateAll,setErrors,errors} = useValidation();
@@ -68,43 +68,17 @@ const SignUp = () => {
         }));
     }
 
-    const signUp = async(email)=>{
+    const signUp = async()=>{
         console.log("Inside SignUp loading =>",loading," token =>",token)
         if (loading) return;  // Prevent multiple API calls if already loading
        // console.log("Data =>",data)
         const newErrors = validateAll(data);
 
         if (Object.keys(newErrors).length === 0) {
-         // console.log("Form is valid and ready to submit!", data);
-         // console.log("Callaing SEND_OTP_API =>",authEndpoints.SEND_OTP_API)
-          // Display loading toast and store its reference
-          const loadingToastId = toast.loading("Sending OTP...", { duration: 3000 });
-            try{
-                dispatch(setLoading(true));  // Set loading state in Redux
-                const result = await apiConnector("POST",authEndpoints.SEND_OTP_API,{email:data?.email||email});
-                console.log("Send OTP API result =>",result);
-                console.log("Send OTP API result =>",result?.data?.success," Type =>",typeof result?.data?.success);
-
-                if(result?.data?.success){
-                    console.log("Inside success condition")
-                    toast.success(`${result?.data?.message}`,{duration:3000});
-                    dispatch(setSignUpData(data))
-                    navigate('/verify-email')
-                    
-                 }else {
-                    toast.error("Failed to send OTP. Please try again.");
-                  }
-
-            }catch(error){
-                toast.error(error?.response?.data?.message || "An error occurred", { duration: 3000 });
-            }finally{
-                dispatch(setLoading(false));  // Reset loading state in Redux
-    
-                // Dismiss the loading toast if it's still active
-                toast.dismiss(loadingToastId);
-                console.log("last console , loading =>",loading)
-                // setting state with initial empty values
-                setData({
+        
+            dispatch(setSignUpData(data))
+            dispatch(sendOTP(data?.email,navigate))
+            setData({
                     fName:"",
                     lName:"",
                     email:"",
@@ -113,14 +87,8 @@ const SignUp = () => {
                     countryCode:"+91",
                     mobile:"",
                     accountType:currentTab
-                   })
-                   setErrors({})
-                //console.log("SingUpData =>",signupData)
-            }
-          
-         
-        
-         
+                })
+            setErrors({})
         } else {
           console.log("Form has errors.");
           console.log("Data =>",data," Errors =>",errors);

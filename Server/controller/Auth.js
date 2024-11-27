@@ -69,6 +69,12 @@ exports.sendotp = async (req, res, next) => {
 
 //signUp controller for Registering the user
 exports.signup = async (req, res, next) => {
+  //code 0=Cannot signup try again to redirect to signupscreen
+  //code 1=password and confirm password doesnot match redirect to signupscreen
+  //code 2=User already exist,  redirect to login screen
+  //code 3=otp not found redirect to verifyEmailScreen
+  //code 4=Invalid otp, redirect to verifyEmailScreen
+  //code -1=User registered successfully redirect to dashboard
   try {
     let saltRounds = 10;
     const {
@@ -109,6 +115,7 @@ exports.signup = async (req, res, next) => {
       return res.status(400).json({
         success: false,
         message: "Password and Confirm Password does not match",
+        code:1 
       });
     }
 
@@ -119,6 +126,7 @@ exports.signup = async (req, res, next) => {
       return res.status(400).json({
         success: false,
         message: "User already registered , Kindly Login to continue",
+        code:2
       });
     }
 
@@ -130,11 +138,13 @@ exports.signup = async (req, res, next) => {
       return res.status(400).json({
         success: false,
         message: "OTP not found",
+        code:3
       });
     } else if (Number(otp) != Number(recentOTP[0].otp)) {
       return res.status(400).json({
         success: false,
         message: "Invalid OTP",
+        code:4
       });
     }
 
@@ -177,6 +187,7 @@ exports.signup = async (req, res, next) => {
         success: true,
         message: "User registered successfully",
         data: user,
+        code:-1
       });
     }
   } catch (error) {
@@ -185,19 +196,27 @@ exports.signup = async (req, res, next) => {
     return res.status(500).json({
       success: false,
       error: error.message,
-      message:"User cannot be registered. Please try again."
+      message:"User cannot be registered. Please try again.",
+      code:0
     });
   }
 };
 
 //Login controller for authenticating users
 exports.login = async (req, res, next) => {
+   //code 0=Cannot login try again to redirect to loginscreen
+   //code 1=provide all details redirect to loginscreen
+  //code 2=user not registered redirect to signupscreen
+  //code 3=password incorrect,  redirect to login screen
+  //code -1=login success  redirect to dashboard
+  
   try {
     const { email, password } = req.body;
     if (!email || !password) {
       return res.status(400).json({
         success: false,
         message: "Please provide all details",
+        code:1
       });
     }
 
@@ -208,6 +227,7 @@ exports.login = async (req, res, next) => {
 			return res.status(401).json({
 				success: false,
 				message: `User is not Registered with Us Please SignUp to Continue`,
+        code:2
 			});
 		}
 
@@ -236,11 +256,13 @@ exports.login = async (req, res, next) => {
         message: "User Login Successfull",
         data:user,
         token:token,
+        code:-1
       });
     } else {
       return res.status(401).json({
         success: false,
         message: "Password is incorrect",
+        code:3
       });
     }
   } catch (error) {
@@ -252,6 +274,7 @@ exports.login = async (req, res, next) => {
       success: false,
       error: error.message,
       message: `Login Failure Please Try Again`,
+      code:0
     });
   }
 };

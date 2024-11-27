@@ -22,7 +22,8 @@ const authSlice = createSlice({
         },
         setSignUpData(state,action){
             state.signupData= action.payload
-        }
+        },
+       
     }
 })
 
