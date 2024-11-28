@@ -20,7 +20,7 @@ const Home = () => {
 
         <div className='group mx-auto flex flex-col w-11/12 items-center text-white justify-between'>
 
-            <Link to={"/singup"}>
+            <Link to={"/signup"}>
                 <div className='md:mb-5 sm:mb-5 mt-16 p-1 mx-auto rounded-full bg-richblack-800 font-bold text-richblack-200 transition duration-200 hover:scale-95 w-full'>
                     <div className='flex flex-row items-center gap-2 rounded-full px-10 py-[5px] transition duration-200 group-hover:bg-richblack-900'>
                         <p>Become an Instructor</p> <FaArrowRight/>

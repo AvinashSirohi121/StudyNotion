@@ -23,6 +23,7 @@ const Login = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const {loading, token} = useSelector((state)=>state.auth)
+    const {user} = useSelector((state)=>state.profile);
     const handleChange =(e)=>{
         const {name,value} = e.target;
         const error = validate(name,value,data);
@@ -52,7 +53,7 @@ const Login = () => {
     }
     const loginFN=()=>{
         //const newErrors = validateAll(data);
-        console.log("Inside Login loading =>",loading," token =>",token)
+        console.log("Inside Login loading =>",loading," token =>",token, " user =>",user)
         if (loading) return;  // Prevent multiple API calls if already loading
        // console.log("Data =>",data)
         // const newErrors = validateAll(data);
@@ -65,8 +66,8 @@ const Login = () => {
                })
                setErrors({})
         } else {
-          console.log("Form has errors.");
-          console.log("Data =>",data," Errors =>",errors);
+        //   console.log("Form has errors.");
+        //   console.log("Data =>",data," Errors =>",errors);
           toast.error("Kindly fill all the details",{duration:3000})
         }
         

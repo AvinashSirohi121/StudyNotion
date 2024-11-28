@@ -110,9 +110,9 @@ export const login =(data,navigate)=>{
                email:data?.email,
                password:data?.password
             });
-            console.log("Login API result =>",result?.data?.data);
-            console.log("Login Token result =>",result?.data?.token);
-            console.log("Login OTP API result =>",result?.data?.success," Type =>",typeof result?.data?.success);
+            // console.log("Login API result =>",result?.data?.data);
+            // console.log("Login Token result =>",result?.data?.token);
+            // console.log("Login OTP API result =>",result?.data?.success," Type =>",typeof result?.data?.success);
 
             if(result?.data?.success){
                 console.log("Inside success condition")
@@ -124,6 +124,7 @@ export const login =(data,navigate)=>{
                 dispatch(setUser({ ...result?.data?.data, image: userImage }))
                 localStorage.setItem("token", JSON.stringify(result?.data?.token))
                 navigate('/dashboard')
+                
                 
              }else {
                 console.log("Inside else block")

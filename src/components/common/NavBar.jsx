@@ -16,9 +16,12 @@ const NavBar = () => {
      const {token} = useSelector((state)=>state.auth);
      const {user} = useSelector((state)=>state.profile);
      const {totalItems} = useSelector((state)=>state.cart);
-    //  console.log("Token =>",token)
-    //  console.log("TotalItems =>",totalItems)
-    //  console.log("User =>",user)
+     console.log("Token =>",token)
+     console.log("TotalItems =>",totalItems)
+     console.log("User =>",user)
+     useEffect(()=>{
+
+     },[user,token])
 
     //  const sublink = [
     //     {
@@ -98,7 +101,7 @@ const NavBar = () => {
                         )}
                     </Link>
                 )} */}
-                {/* {
+                {
                     token ==null && (
                         <Link to="/login">
                              <button className="border-richblack-700 bg-richblack-800 px-[12px] py-[8px] text-richblack-100 rounded-md" >Login</button>
@@ -111,12 +114,12 @@ const NavBar = () => {
                             <button className="border-richblack-700 bg-richblack-800 px-[12px] py-[8px] text-richblack-100 rounded-md" >Signup</button>
                         </Link>
                     )
-                } */}
-                {/* {
-                    token  !==null && ( */}
+                }
+                {
+                    token  !==null && ( 
                         <ProfileDropDown user={user} totalItem={totalItems}/>
-                    {/* )
-                } */}
+                    )
+                }
         </div>
 
 
