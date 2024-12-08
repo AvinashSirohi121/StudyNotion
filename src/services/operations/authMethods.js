@@ -3,7 +3,7 @@ import { authEndpoints } from '../api'
 import toast from 'react-hot-toast'
 import { setLoading,setLoginData,setSignUpData, setToken } from "../../slices/authSlice"
 import { setUser } from "../../slices/profileSlice"
-
+import { resetCart } from "../../slices/cartSlice"
 
 
 export const sendOTP =(email,navigate)=>{
@@ -123,7 +123,11 @@ export const login =(data,navigate)=>{
                 const userImage = result?.data?.data?.image || `https://api.dicebear.com/5.x/initials/svg?seed=${result?.data?.data?.firstName} ${result?.data?.data?.lastName}`
                 dispatch(setUser({ ...result?.data?.data, image: userImage }))
                 localStorage.setItem("token", JSON.stringify(result?.data?.token))
-                navigate('/dashboard')
+                localStorage.setItem("user",JSON.stringify(result?.data?.data))
+                console.log("Setting token and user in localStorage =>")
+                console.log("Token =>",localStorage.getItem("token"))
+                console.log("user =>",localStorage.getItem("user"))
+                navigate('/dashboard/my-profile')
                 
                 
              }else {
@@ -154,5 +158,24 @@ export const login =(data,navigate)=>{
             toast.dismiss(loadingToastId);
             
         }  
+    }
+}
+
+export const logout=(navigate)=>{
+    return (dispatch)=>{
+        dispatch(setToken(null))
+        dispatch(setUser(null))
+        dispatch(resetCart())
+        localStorage.removeItem("token")
+        localStorage.removeItem("user")
+        toast.success("Logged Out")
+        navigate("/")
+
+    }
+}
+
+export const forgotPassword=()=>{
+    return (dispatch)=>{
+        
     }
 }

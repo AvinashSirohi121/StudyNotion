@@ -25,7 +25,7 @@ const ProfileDropDown = ({user,totalItem}) => {
           </div>
         </div>
 
-        <Link to="/dashboard/cart" className="relative lg:mt-2" >
+       
                   {user && user?.accountType !== "Instructor" && (
                     <Link to="/dashboard/cart" className="relative">
                          <IoCart className="text-white text-[20px] " />
@@ -38,7 +38,7 @@ const ProfileDropDown = ({user,totalItem}) => {
                         {totalItem > 0 && (
                             <span  className="text-white text-[10px] flex justify-center items-center w-[15px] h-[15px] p-[2px] absolute top-[-8px] right-[-5px] bg-pink-300 rounded-full">{totalItem}</span>
                         )} */}
-        </Link>
+     
 
         <div className="relative group lg:mt-1 md:mt-[2px]" onClick={toggleMenu}>
             {user && user?.image ? 
