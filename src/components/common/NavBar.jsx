@@ -16,9 +16,9 @@ const NavBar = () => {
      const {token} = useSelector((state)=>state.auth);
      const {user} = useSelector((state)=>state.profile);
      const {totalItems} = useSelector((state)=>state.cart);
-     console.log("Token =>",token)
-     console.log("TotalItems =>",totalItems)
-     console.log("User =>",user)
+    //  console.log("Token =>",token)
+    //  console.log("TotalItems =>",totalItems)
+    //  console.log("User =>",user)
      useEffect(()=>{
 
      },[user,token])
