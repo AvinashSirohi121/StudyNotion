@@ -5,6 +5,7 @@ import {logout} from "../../services/operations/authMethods";
 import { useSelector } from 'react-redux';
 import SidebarLink from './SidebarLink';
 import { VscSettingsGear } from 'react-icons/vsc';
+import { BsCart4 } from "react-icons/bs";
 
 const LeftPanal = () => {
 
@@ -22,7 +23,7 @@ const LeftPanal = () => {
 
     return (
     <div className=''>
-        <div className='flex min-w-[222px] flex-col border-r-[1px] border-r-richblack-700 h-[calc(100vh-3.5rem)] bg-richblack-800 py-10'>
+        <div className='flex min-w-[14rem] flex-col border-r-[1px] border-r-richblack-700 h-full bg-richblack-800 py-10'>
             <div className='flex flex-col'>
                 {sidebarLinks.map((link)=>{
                     if(link.type && user?.accountType !== link?.type) return null;
@@ -46,7 +47,7 @@ const LeftPanal = () => {
  
             </div>
         </div>
-        LeftPanal
+       
     </div>
   )
 }
