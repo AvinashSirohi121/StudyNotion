@@ -2,58 +2,57 @@ import React from 'react'
 import ProgressBar from "@ramonak/react-progress-bar";
 
 const EnrolledCourses = () => {
-  // let courses =[
-  //   {
-  //     "courseName": "JavaScript for Beginners",
-  //     "courseDescription": "Learn the fundamentals of JavaScript, the most popular programming language for web development.Learn the fundamentals of JavaScript, the most popular programming language for web development.Learn the fundamentals of JavaScript, the most popular programming language for web development.Learn the fundamentals of JavaScript, the most popular programming language for web development.Learn the fundamentals of JavaScript, the most popular programming language for web development.",
-  //     "courseProgress": "80%"
-  //   },
-  //   {
-  //     "courseName": "ReactJS Mastery",
-  //     "courseDescription": "Master ReactJS and build dynamic, responsive user interfaces with reusable components.",
-  //     "courseProgress": "30%"
-  //   },
-  //   {
-  //     "courseName": "Node.js Fundamentals",
-  //     "courseDescription": "Understand backend development with Node.js, including APIs, Express, and database integration.",
-  //     "courseProgress": "60%"
-  //   },
-  //   {
-  //     "courseName": "CSS Flexbox and Grid",
-  //     "courseDescription": "Learn advanced CSS techniques to create beautiful and flexible web layouts.",
-  //     "courseProgress": "45%"
-  //   },
-  //   {
-  //     "courseName": "MongoDB Basics",
-  //     "courseDescription": "Explore the basics of MongoDB, a NoSQL database, and how to use it in web applications.",
-  //     "courseProgress": "90%"
-  //   },{
-  //     "courseName": "JavaScript for Beginners",
-  //     "courseDescription": "Learn the fundamentals of JavaScript, the most popular programming language for web development.Learn the fundamentals of JavaScript, the most popular programming language for web development.Learn the fundamentals of JavaScript, the most popular programming language for web development.Learn the fundamentals of JavaScript, the most popular programming language for web development.Learn the fundamentals of JavaScript, the most popular programming language for web development.",
-  //     "courseProgress": "80%"
-  //   },
-  //   {
-  //     "courseName": "ReactJS Mastery",
-  //     "courseDescription": "Master ReactJS and build dynamic, responsive user interfaces with reusable components.",
-  //     "courseProgress": "30%"
-  //   },
-  //   {
-  //     "courseName": "Node.js Fundamentals",
-  //     "courseDescription": "Understand backend development with Node.js, including APIs, Express, and database integration.",
-  //     "courseProgress": "60%"
-  //   },
-  //   {
-  //     "courseName": "CSS Flexbox and Grid",
-  //     "courseDescription": "Learn advanced CSS techniques to create beautiful and flexible web layouts.",
-  //     "courseProgress": "45%"
-  //   },
-  //   {
-  //     "courseName": "MongoDB Basics",
-  //     "courseDescription": "Explore the basics of MongoDB, a NoSQL database, and how to use it in web applications.",
-  //     "courseProgress": "90%"
-  //   }
-  // ]
-  let courses=[]
+  let courses =[
+    {
+      "courseName": "JavaScript for Beginners",
+      "courseDescription": "Learn the fundamentals of JavaScript, the most popular programming language for web development.Learn the fundamentals of JavaScript, the most popular programming language for web development.Learn the fundamentals of JavaScript, the most popular programming language for web development.Learn the fundamentals of JavaScript, the most popular programming language for web development.Learn the fundamentals of JavaScript, the most popular programming language for web development.",
+      "courseProgress": "80%"
+    },
+    {
+      "courseName": "ReactJS Mastery",
+      "courseDescription": "Master ReactJS and build dynamic, responsive user interfaces with reusable components.",
+      "courseProgress": "30%"
+    },
+    {
+      "courseName": "Node.js Fundamentals",
+      "courseDescription": "Understand backend development with Node.js, including APIs, Express, and database integration.",
+      "courseProgress": "60%"
+    },
+    {
+      "courseName": "CSS Flexbox and Grid",
+      "courseDescription": "Learn advanced CSS techniques to create beautiful and flexible web layouts.",
+      "courseProgress": "45%"
+    },
+    {
+      "courseName": "MongoDB Basics",
+      "courseDescription": "Explore the basics of MongoDB, a NoSQL database, and how to use it in web applications.",
+      "courseProgress": "90%"
+    },{
+      "courseName": "JavaScript for Beginners",
+      "courseDescription": "Learn the fundamentals of JavaScript, the most popular programming language for web development.Learn the fundamentals of JavaScript, the most popular programming language for web development.Learn the fundamentals of JavaScript, the most popular programming language for web development.Learn the fundamentals of JavaScript, the most popular programming language for web development.Learn the fundamentals of JavaScript, the most popular programming language for web development.",
+      "courseProgress": "80%"
+    },
+    {
+      "courseName": "ReactJS Mastery",
+      "courseDescription": "Master ReactJS and build dynamic, responsive user interfaces with reusable components.",
+      "courseProgress": "30%"
+    },
+    {
+      "courseName": "Node.js Fundamentals",
+      "courseDescription": "Understand backend development with Node.js, including APIs, Express, and database integration.",
+      "courseProgress": "60%"
+    },
+    {
+      "courseName": "CSS Flexbox and Grid",
+      "courseDescription": "Learn advanced CSS techniques to create beautiful and flexible web layouts.",
+      "courseProgress": "45%"
+    },
+    {
+      "courseName": "MongoDB Basics",
+      "courseDescription": "Explore the basics of MongoDB, a NoSQL database, and how to use it in web applications.",
+      "courseProgress": "90%"
+    }
+  ]
   
   return (
     <div className='text-white'>
