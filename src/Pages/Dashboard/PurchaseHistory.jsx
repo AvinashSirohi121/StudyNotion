@@ -1,64 +1,63 @@
 import React from 'react'
 
 const PurchaseHistory = () => {
-  // let purchaseHistory =[
-  //   {
-  //     "courseName": "Full-Stack Web Development",
-  //     "courseDescription": "Learn to build scalable web applications using MERN stack technologies.",
-  //     "price": 199.99,
-  //     "dateOfPurchase": "2024-01-15",
-  //     "instructor": "John Doe",
-  //     "rating": 4.8,
-  //     "purchaseID": "PSH123456",
-  //     "platform": "Web",
-  //     "completionStatus": "In Progress"
-  //   },
-  //   {
-  //     "courseName": "Python for Data Science",
-  //     "courseDescription": "Master Python programming and data analysis techniques for data science.",
-  //     "price": 149.99,
-  //     "dateOfPurchase": "2023-12-10",
-  //     "instructor": "Jane Smith",
-  //     "rating": 4.7,
-  //     "purchaseID": "PSH123457",
-  //     "platform": "Mobile",
-  //     "completionStatus": "Completed"
-  //   },
-  //   {
-  //     "courseName": "Introduction to AI and Machine Learning",
-  //     "courseDescription": "Dive into AI and ML concepts with hands-on projects and case studies.",
-  //     "price": 299.99,
-  //     "dateOfPurchase": "2024-02-20",
-  //     "instructor": "Dr. Alice Johnson",
-  //     "rating": 4.9,
-  //     "purchaseID": "PSH123458",
-  //     "platform": "Web",
-  //     "completionStatus": "Not Started"
-  //   },
-  //   {
-  //     "courseName": "UI/UX Design Essentials",
-  //     "courseDescription": "Learn design principles and tools to create user-friendly interfaces.",
-  //     "price": 99.99,
-  //     "dateOfPurchase": "2023-11-05",
-  //     "instructor": "Michael Brown",
-  //     "rating": 4.6,
-  //     "purchaseID": "PSH123459",
-  //     "platform": "Mobile",
-  //     "completionStatus": "Completed"
-  //   },
-  //   {
-  //     "courseName": "Cloud Computing with AWS",
-  //     "courseDescription": "Gain expertise in AWS services and deploy cloud-based applications.",
-  //     "price": 249.99,
-  //     "dateOfPurchase": "2024-03-01",
-  //     "instructor": "Emily Davis",
-  //     "rating": 4.8,
-  //     "purchaseID": "PSH123460",
-  //     "platform": "Web",
-  //     "completionStatus": "In Progress"
-  //   }
-  // ]
-  let purchaseHistory=[];
+  let purchaseHistory =[
+    {
+      "courseName": "Full-Stack Web Development",
+      "courseDescription": "Learn to build scalable web applications using MERN stack technologies.",
+      "price": 0.0,
+      "dateOfPurchase": "2024-01-15",
+      "instructor": "John Doe",
+      "rating": 4.8,
+      "purchaseID": "PSH123456",
+      "platform": "Web",
+      "completionStatus": "In Progress"
+    },
+    {
+      "courseName": "Python for Data Science",
+      "courseDescription": "Master Python programming and data analysis techniques for data science.",
+      "price": 149.99,
+      "dateOfPurchase": "2023-12-10",
+      "instructor": "Jane Smith",
+      "rating": 4.7,
+      "purchaseID": "PSH123457",
+      "platform": "Mobile",
+      "completionStatus": "Completed"
+    },
+    {
+      "courseName": "Introduction to AI and Machine Learning",
+      "courseDescription": "Dive into AI and ML concepts with hands-on projects and case studies.",
+      "price": 0,
+      "dateOfPurchase": "2024-02-20",
+      "instructor": "Dr. Alice Johnson",
+      "rating": 4.9,
+      "purchaseID": "PSH123458",
+      "platform": "Web",
+      "completionStatus": "Not Started"
+    },
+    {
+      "courseName": "UI/UX Design Essentials",
+      "courseDescription": "Learn design principles and tools to create user-friendly interfaces.",
+      "price": 99.99,
+      "dateOfPurchase": "2023-11-05",
+      "instructor": "Michael Brown",
+      "rating": 4.6,
+      "purchaseID": "PSH123459",
+      "platform": "Mobile",
+      "completionStatus": "Completed"
+    },
+    {
+      "courseName": "Cloud Computing with AWS",
+      "courseDescription": "Gain expertise in AWS services and deploy cloud-based applications.",
+      "price": 249.99,
+      "dateOfPurchase": "2024-03-01",
+      "instructor": "Emily Davis",
+      "rating": 4.8,
+      "purchaseID": "PSH123460",
+      "platform": "Web",
+      "completionStatus": "In Progress"
+    }
+  ]
   
   return (
     <div className='text-white'>
@@ -89,7 +88,7 @@ const PurchaseHistory = () => {
           </div>
         
           <p className='flex  gap-2 items-center w-[15%] '>{course.dateOfPurchase}</p>
-          <p className='flex  gap-2 items-center w-[15%] text-lg text-yellow-25'>{` ₹ ${course.price}`}</p>
+          <p className='flex  gap-2 items-center w-[15%] text-lg text-yellow-25'>{course?.price && parseInt(course?.price) !== 0 ? `₹ ${(course?.price).toFixed(2)}` : " Free"}</p>
           
         </div>
         ))}
