@@ -156,7 +156,7 @@ const SignUp = () => {
                                 {errors.email && <span className="text-[10px]  text-pink-1000">{errors.email}</span>}
                         </div>
 
-                        <div className='flex lg:flex-row lg:justify-between md:flex-col sm:flex-col  gap-2 md:mb-2 sm:mb-2 lg:mb-4 '>
+                <div className='flex lg:flex-row lg:justify-between md:flex-col sm:flex-col  gap-2 md:mb-2 sm:mb-2 lg:mb-4 '>
                     <div className='flex flex-col'>
                         <label className='flex text-sm'>Phone Number<AiFillStar className='text-[5px]  text-pink-1000'/></label>
                         <div className="flex gap-2">
