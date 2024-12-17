@@ -2,10 +2,17 @@ import React from 'react'
 import EditButton from '../../components/Dashboard/EditButton'
 import { FaArrowLeft } from "react-icons/fa";
 import { Link, useNavigate } from 'react-router-dom';
-
+import { useSelector } from 'react-redux';
+import User from "../../assets/Images/user.png"
+import { RiEditBoxLine } from "react-icons/ri"
+import IconBtn from '../../components/Dashboard/Iconbtn';
 const MyProfile = () => {
 
   const navigate = useNavigate();
+  const {user} = useSelector((state)=>state.profile);
+
+
+  
 
   return (
     <div className='text-white flex flex-col '>
@@ -13,52 +20,81 @@ const MyProfile = () => {
         <h2 className='text-2xl mt-[2rem]'>
           My Profile
         </h2>
-        <div className='flex  mt-[3rem] bg-richblack-800 p-[2rem] rounded-lg px-8 flex justify-between items-center border-[1px] border-richblack-600'>
+        <div className='mt-[3rem] bg-richblack-800 p-[2rem] rounded-lg px-8 flex justify-between items-center border-[1px] border-richblack-600'>
           <div className='flex gap-4 w-[80%]  items-center px-4'>
-          <img src="" alt="User Image" 
-          className='h-[5rem] w-[5rem] rounded-full bg-yellow-200 '/>
+          <img src={user?.image ?
+              user?.image : user?.firstName && user?.lastName ?
+              `https://api.dicebear.com/5.x/initials/svg?seed=${user?.firstName} ${user?.lastName}` : User}
+              alt={`Profile -${user?.firstName}`} 
+          className='h-[5rem] w-[5rem] rounded-full  '/>
 
           <div className=''>
-            <p className='font-bold text-lg'>Avinash Sirohi</p>
-            <p className='text-richblack-400 '>avinashsirohi121@gmail.com</p>
+            <p className='font-bold text-lg'>{`${user?.firstName} ${user?.lastName}`}</p>
+            <p className='text-richblack-400 '>{`${user?.email}`}</p>
           </div>
           </div>
 
           
 
-          <EditButton/>
+          <IconBtn
+          text="Edit"
+          onclick={() => {
+            navigate("/dashboard/Settings")
+          }}
+        >
+          <RiEditBoxLine />
+        </IconBtn>
         </div>
 
-        <div className='flex  mt-[3rem] bg-richblack-800 p-[2rem] rounded-lg px-8 flex justify-between  border-[1px] border-richblack-600'>
-          <div className='flex gap-4 w-[80%]  items-center px-4'>
+        <div className='flex flex-col mt-[3rem] bg-richblack-800 p-[2rem] rounded-lg px-8 justify-between  border-[1px] border-richblack-600'>
+          
          
-          <div className=''>
-            <p className='font-bold text-lg'>About</p>
-            <p className='text-richblack-400 mt-[3rem]'>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Tenetur sunt accusamus eum nam odit ipsum. Laborum quis corporis accusamus eaque, harum nesciunt, modi hic libero omnis ratione error dolorem molestias.</p>
-          </div>
-          </div>
+          
+                  <div className='flex justify-between'>
+                  <p className='font-bold text-lg'>Personal Details</p>
+                  <IconBtn
+                  text="Edit"
+                  onclick={() => {
+                    navigate("/dashboard/Settings")
+                  }}
+                >
+                  <RiEditBoxLine />
+                </IconBtn>
+                  </div>
+              <p className={`text-richblack-400 mt-[3rem] ${user?.additionalDetails?.about ? "" : "italic text-sm text-richblack-200"}`}>{`${user?.additionalDetails?.about ?  user?.additionalDetails?.about :`Please write about youself...`}`}</p>
+          
+         
+
+         
 
           
-
-          <EditButton/>
         </div>
 
-        <div className='flex flex-col mt-[3rem] bg-richblack-800 p-[2rem] rounded-lg px-8 flex justify-between  border-[1px] border-richblack-600'>
+        <div className='flex flex-col mt-[3rem] bg-richblack-800 p-[2rem] rounded-lg px-8 justify-between  border-[1px] border-richblack-600'>
          
          <div className='flex justify-between'>
           <p className='font-bold text-lg'>Personal Details</p>
-          <EditButton/>
+          <IconBtn
+          text="Edit"
+          onclick={() => {
+            navigate("/dashboard/Settings")
+          }}
+        >
+          <RiEditBoxLine />
+        </IconBtn>
           </div>
+
+
          <div className='mt-[3rem]'>
             <div className='flex flex-col gap-4'>
                 <div className='flex  gap-6  h-[5rem] w-[100%]'>
                       <div className='min-w-[50%]'>
                         <p className='text-sm text-richblack-400'>First Name</p>
-                        <p>Avinash</p>
+                        <p>{`${user?.firstName}`}</p>
                       </div>
                       <div className='min-w-[50%]'>
                         <p className='text-sm text-richblack-400'>Last Name</p>
-                        <p>Sirohi</p>
+                        <p>{`${user?.lastName}`}</p>
                       </div>
                   </div>
             </div>
@@ -66,23 +102,25 @@ const MyProfile = () => {
                 <div className='flex  gap-6  h-[5rem] w-[100%]'>
                       <div className='min-w-[50%]'>
                         <p className='text-sm text-richblack-400'>Email</p>
-                        <p>avinashsirohi86@gmail.com</p>
+                        <p>{`${user?.email}`}</p>
                       </div>
                       <div className='min-w-[50%]'>
                         <p className='text-sm text-richblack-400'>Phone Number</p>
-                        <p>909090909090</p>
+                        <p>{`+ ${String(user?.contactNumber).slice(0,2)} - ${String(user?.contactNumber).slice(2)}`}</p>
                       </div>
                   </div>
             </div>
             <div className='flex flex-col gap-4'>
                 <div className='flex  gap-6  h-[5rem] w-[100%]'>
                       <div className='min-w-[50%]'>
-                        <p className='text-sm text-richblack-400'>Gender</p>
-                        <p>Male</p>
+                        <p className={`text-sm text-richblack-400  `}>Gender</p>
+                        <p className={`${user?.additionalDetails?.gender ? "" : "italic text-sm text-richblack-200 ml-2"}`}>{`${user?.additionalDetails?.gender ? user?.additionalDetails?.gender : `-NA-`}`}</p>
                       </div>
                       <div className='min-w-[50%]'>
                         <p className='text-sm text-richblack-400'>Date of Birth</p>
-                        <p>October 24, 1999</p>
+                        <p className={`${user?.additionalDetails?.dob ? "" : "italic text-sm text-richblack-200 ml-2"}`}>
+                        {`${user?.additionalDetails?.dob ? user?.additionalDetails?.dob : `-NA-`}`}
+                        </p>
                       </div>
                   </div>
             </div>
