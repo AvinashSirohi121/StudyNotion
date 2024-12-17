@@ -3,7 +3,7 @@ import {toast} from "react-hot-toast"
 
 const initalState = {
    totalItems : localStorage.getItem("totalItems") ?
-    JSON.parse(localStorage.getItem("totalItems")) :0,
+    JSON.parse(localStorage.getItem("totalItems")) :9,
 
    total:localStorage.getItem("total") ? 
    JSON.parse(localStorage.getItem('total')) :0,

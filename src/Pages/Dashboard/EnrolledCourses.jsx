@@ -56,7 +56,7 @@ const EnrolledCourses = () => {
   
   return (
     <div className='text-white'>
-      <p className='flex gap-2'>Home / Dashboard / <p className='text-yellow-50'> Enrolled Courses</p></p>
+      <p className='flex gap-2'>Home / Dashboard / <span className='text-yellow-50'> Enrolled Courses</span></p>
 
       {courses && courses.length>0 ?
       <>
@@ -69,7 +69,7 @@ const EnrolledCourses = () => {
           <div className='md:ml-12 lg:ml-0'>Progress</div>
         </div>
         {courses.map((course,index)=>(
-          <div className='p-3 px-4 flex justify-between items-center border-[1px] border-richblack-600'>
+          <div key={index} className='p-3 px-4 flex justify-between items-center border-[1px] border-richblack-600'>
           <div className='flex gap-4'>
               <img src="" className='bg-richblack-700 md:h-[3rem] md:w-[3rem] lg:h-[4rem] lg:w-[4rem] rounded-md' />
               <div className='flex flex-col  max-w-[70%]'>

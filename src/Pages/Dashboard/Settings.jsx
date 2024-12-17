@@ -10,6 +10,7 @@ import countryCode from "../../data/countrycode.json";
 import { AiFillStar } from "react-icons/ai";
 import ChangePassword from './ChangePassword';
 import DeleteProfile from './DeleteProfile';
+import IconBtn from '../../components/Dashboard/Iconbtn';
 
 
 
@@ -36,9 +37,7 @@ const Settings = () => {
 
   const {validate,validateAll,setErrors,errors} = useValidation();
 
-  const [viewOldPassword,setViewOldPassword] = useState(false);
-  const [viewPassword,setViewPassword] = useState(false);
-  const [viewConfirmPassword,setViewConfirmPassword] = useState(false);
+
   
   
 
@@ -65,6 +64,7 @@ const Settings = () => {
   })
 
   const handleChange =(e)=>{
+
     const {name,value} = e.target;
     const error = validate(name,value,data);
    // console.log("Name =>",name," Value =>",value)
@@ -108,9 +108,10 @@ const Settings = () => {
                 type="file"
                 className="hidden"
                 onChange={handleFileChange}
-              /> 
-            <button className='flex text-black bg-yellow-50 gap-3 justify-center items-center p-2 rounded-lg w-[6rem] h-[2.5rem] font-bold leading-3'>Upload</button>
-            </p>
+              />
+                <IconBtn text="Upload"></IconBtn> 
+           </p>
+           
           </div>
           </div>
 
@@ -125,7 +126,7 @@ const Settings = () => {
           
           <div className='flex w-[100%] justify-between'>
           <p className='font-bold text-lg'>Personal Details</p>
-          <EditButton/>
+          <IconBtn text="Save"></IconBtn>
           </div>
            
             <div className='lg:mt-4 '>
@@ -133,8 +134,10 @@ const Settings = () => {
                         <div className='flex flex-col'>
                             <label className='flex text-sm'>First Name <AiFillStar className='text-[5px]  text-pink-1000'/></label>
                             <input 
+                                type="text"
                                 name="fName"
-                                value={data.fName}
+                                // value={data.fName}
+                                defaultValue={user?.user?.firstName}
                                 onChange={(e)=>handleChange(e)}
                                 className='h-[40px] lg:w-[23rem]  rounded-lg bg-richblack-700 pl-2 border-b border-richblack-400 outline-none mt-1' 
                                 placeholder='Enter first name'/>
@@ -144,7 +147,8 @@ const Settings = () => {
                         <label className='flex text-sm'>Last Name <AiFillStar className='text-[5px]  text-pink-1000'/></label>
                         <input 
                             name="lName"
-                            value={data.lName}
+                            type="text"
+                            defaultValue={user?.user?.lastName}
                             onChange={(e)=>handleChange(e)}
                             className='h-[40px] lg:w-[23rem]  rounded-lg bg-richblack-700 pl-2 border-b border-richblack-400 outline-none mt-1' 
                             placeholder='Enter last name'/>
@@ -157,8 +161,8 @@ const Settings = () => {
                       
                             <label className='flex text-sm'>Email Address <AiFillStar className='text-[5px]  text-pink-1000'/></label>
                             <input 
-                                name="email"
-                                value={data.email}
+                                name="email" type="text"
+                                defaultValue={user?.user?.email}
                                 onChange={(e)=>handleChange(e)}
                                 className='h-[40px]  lg:w-[23rem]  md:w-full sm:w-full  rounded-lg bg-richblack-700 pl-2 border-b border-richblack-400 outline-none mt-1' 
                                 placeholder='Enter email address'/>
@@ -168,7 +172,8 @@ const Settings = () => {
                             <label className='flex text-sm'>Gender<AiFillStar className='text-[5px]  text-pink-1000'/></label>
                             <select
                                 className="h-[40px] lg:w-[23rem]  rounded-lg bg-richblack-700 pl-2 border-b border-richblack-400 outline-none mt-1"
-                                value={data.gender}
+                                type="text"
+                                defaultValue={user?.user?.gender}
                                 onChange={handleChange}
                                 name='gender'>
                                     {/* <option value={data.gender}>
@@ -190,7 +195,7 @@ const Settings = () => {
                         <label className='flex text-sm'>Phone Number<AiFillStar className='text-[5px]  text-pink-1000'/></label>
                         <div className="flex gap-2 lg:w-[23rem]">
 
-                        <select
+                        {/* <select
                                 className="w-[60px] h-[40px] rounded-lg bg-richblack-700  border-b border-richblack-400 outline-none mt-1"
                                 value={data.countryCode}
                                 onChange={handleChange}
@@ -205,13 +210,15 @@ const Settings = () => {
                                         </option>
                                         ))
                                     }
-                        </select>
+                        </select> */}
 
-                        <input type="number"
-                            value={data.mobile}
+                        <input 
+                            type="number" 
+                            defaultValue={user?.user?.contactNumber ? 
+                              String(user?.user?.contactNumber).slice(2) :""}                           
                             name="mobile"
                             onChange={handleChange}
-                            className='h-[40px]   md:w-[18rem] sm:w-full rounded-lg bg-richblack-700 pl-2 border-b border-richblack-400 outline-none mt-1 no-arrows' 
+                            className='h-[40px] lg:w-[23rem]  md:w-[18rem] sm:w-full rounded-lg bg-richblack-700 pl-2 border-b border-richblack-400 outline-none mt-1 no-arrows' 
                             placeholder='Enter mobile number'/>
                        
                         </div>
@@ -221,8 +228,8 @@ const Settings = () => {
                     <div className='flex flex-col'>
                             <label className='flex text-sm'>About<AiFillStar className='text-[5px]  text-pink-1000'/></label>
                             <textarea 
-                                name="about"
-                                value={data.about}
+                                name="about" 
+                                defaultValue={user?.user?.additionalDetails?.about}
                                 onChange={(e)=>handleChange(e)}
                                 className='h-[40px] max-h-16 lg:w-[23rem]  rounded-lg bg-richblack-700 pl-2 border-b border-richblack-400 outline-none mt-1' 
                                 placeholder='Enter bio details...'/>

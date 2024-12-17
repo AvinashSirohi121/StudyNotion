@@ -29,8 +29,8 @@ export default function SidebarLink({ link, iconName }) {
       ></span>
       <div className="flex items-center gap-x-2">
         {/* Icon Goes Here */}
-        <Icon className="text-lg" />
-        <span>{link.name}</span>
+        <Icon className="text-lg md:hidden lg:flex" />
+        <span>{link?.name}</span>
       </div>
     </NavLink>
   )

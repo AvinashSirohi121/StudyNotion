@@ -23,7 +23,7 @@ const LeftPanal = () => {
 
     return (
     <div className=''>
-        <div className='flex min-w-[14rem] flex-col border-r-[1px] border-r-richblack-700 h-full bg-richblack-800 py-10'>
+        <div className='flex lg:flex md:flex lg:min-w-[14rem] md:max-w-[10rem] sm:hidden  flex-col border-r-[1px] border-r-richblack-700 h-full bg-richblack-800 py-10'>
             <div className='flex flex-col'>
                 {sidebarLinks.map((link)=>{
                     if(link.type && user?.accountType !== link?.type) return null;

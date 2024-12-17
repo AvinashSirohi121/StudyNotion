@@ -3,7 +3,7 @@ import useValidation from '../../services/hooks/useValidation';
 import { IoEyeOff } from "react-icons/io5";
 import { IoEye } from "react-icons/io5";
 import { AiFillStar } from "react-icons/ai";
-import EditButton from '../../components/Dashboard/EditButton'
+import IconBtn from '../../components/Dashboard/Iconbtn';
 
 const ChangePassword = () => {
 
@@ -58,7 +58,7 @@ const ChangePassword = () => {
     <div className='flex-col mt-[3rem] bg-richblack-800 p-[2rem] rounded-lg px-8 flex justify-between  border-[1px] border-richblack-600'>
     <div className='flex w-[100%] justify-between'>
       <p className='font-bold text-lg'>Change Password</p>
-      <EditButton/>
+      <IconBtn text="Save"></IconBtn>
       </div>
 
     <div className='flex flex-col lg:justify-between  gap-2 md:mb-2 sm:mb-2 lg:mb-8 '>

@@ -77,7 +77,7 @@ const PurchaseHistory = () => {
         </div>
 
         {purchaseHistory.map((course,index)=>(
-          <div className='p-3 px-4 flex justify-between items-center border-[1px] border-richblack-600'>
+          <div key={index} className='p-3 px-4 flex justify-between items-center border-[1px] border-richblack-600'>
           <div className='flex gap-4 w-[70%]'>
               <img src="" className='bg-richblack-700 md:h-[3rem] md:w-[3rem] lg:h-[4rem] lg:w-[4rem] rounded-md' />
               <div className='flex flex-col'>
