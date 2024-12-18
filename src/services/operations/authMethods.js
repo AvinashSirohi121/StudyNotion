@@ -43,7 +43,7 @@ export const sendOTP =(email,navigate)=>{
 export const signUP =(data,otp,navigate)=>{
     return async(dispatch)=>{
         //console.log("Inside verifyOTP Data =>",data,"OTP =>",otp," Navigate =>",navigate)
-        const loadingToastId = toast.loading("Sending OTP...", { duration: 3000 });
+        const loadingToastId = toast.loading("SignUp...", { duration: 3000 });
         let contactNumber=`${data?.countryCode + data?.mobile}`
         console.log("ContactNumber =>",contactNumber)
         try {
@@ -103,7 +103,7 @@ export const signUP =(data,otp,navigate)=>{
 
 export const login =(data,navigate)=>{
     return async(dispatch)=>{
-        const loadingToastId = toast.loading("Sending OTP...", { duration: 3000 });
+        const loadingToastId = toast.loading("Login...", { duration: 3000 });
         try {
             dispatch(setLoading(true));  // Set loading state in Redux
             const result = await apiConnector("POST",authEndpoints.LOGIN_API,{
