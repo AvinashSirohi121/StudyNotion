@@ -2,7 +2,6 @@ import React ,{useState} from 'react'
 import EditButton from '../../components/Dashboard/EditButton'
 import { FaArrowLeft } from "react-icons/fa";
 import { Link, useNavigate } from 'react-router-dom';
-import User from "../../assets/Images/user.png"
 import { useSelector } from 'react-redux';
 import useValidation from '../../services/hooks/useValidation';
 import { useDispatch } from 'react-redux';
@@ -11,6 +10,7 @@ import { AiFillStar } from "react-icons/ai";
 import ChangePassword from './ChangePassword';
 import DeleteProfile from './DeleteProfile';
 import IconBtn from '../../components/Dashboard/Iconbtn';
+import ImageUploader from './ImageUploader';
 
 
 
@@ -18,15 +18,7 @@ import IconBtn from '../../components/Dashboard/Iconbtn';
 const Settings = () => {
   
   const user = useSelector((state)=>state.profile);
-  console.log("User in settings =>",user);
 
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      console.log("Selected file:", file.name); // Perform further actions with the file
-     
-    }
-  };
 
   const genders =[
     {id:1,gender:"Male"},
@@ -36,10 +28,6 @@ const Settings = () => {
   
 
   const {validate,validateAll,setErrors,errors} = useValidation();
-
-
-  
-  
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -89,36 +77,8 @@ const Settings = () => {
         <h2 className='text-2xl mt-[2rem]'>
           Edit Profile
         </h2>
-        <div className='flex  mt-[3rem] bg-richblack-800 p-[2rem] rounded-lg px-8 justify-between items-center border-[1px] border-richblack-600'>
-          <div className='flex gap-4 w-[80%]  items-center px-4'>
-          <img src={user?.user?.image ? user?.user?.image : User} alt="User Image" 
-          className='h-[5rem] w-[5rem] rounded-full bg-white'/>
-
-          <div className='flex flex-col gap-3'>
-            <p className='font-bold'>Change Profile Photo</p>
-            <p className='text-richblack-400 flex gap-3'>
-            <label
-                htmlFor="file-upload"
-                className=' cursor-pointer flex text-white bg-richblack-700 border-[1px] border-richblack-500 gap-3 justify-center items-center p-2 rounded-lg w-[6rem] h-[2.5rem] font-bold leading-3'
-              >
-                Select
-              </label>
-              <input
-                id="file-upload"
-                type="file"
-                className="hidden"
-                onChange={handleFileChange}
-              />
-                <IconBtn text="Upload"></IconBtn> 
-           </p>
-           
-          </div>
-          </div>
-
-          
-
-         
-        </div>
+        
+        <ImageUploader/>
 
         <div className='mt-[3rem] bg-richblack-800 p-[2rem] rounded-lg px-8 flex justify-between  border-[1px] border-richblack-600'>
           <div className='flex flex-col w-full gap-4  justify-star  items-start px-4'>
