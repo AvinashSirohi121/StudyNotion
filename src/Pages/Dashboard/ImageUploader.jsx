@@ -1,25 +1,52 @@
-import React, { useState } from 'react'
-import { useSelector } from 'react-redux';
+import React, { useState,useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
 import IconBtn from '../../components/Dashboard/Iconbtn';
 import User from "../../assets/Images/user.png"
+import { FiUpload } from "react-icons/fi"
+import { updateDisplayPicture } from '../../services/operations/profileMethods';
 
 const ImageUploader = () => {
     const {user} = useSelector((state)=>state.profile);
-    console.log("User in imageuploader =>",user?.user)
+    const {token} = useSelector((state)=>state.auth);
     const [userImage,setUserImage]= useState("");
+    const [previewSource, setPreviewSource] = useState(null)
     const [imageLoading,setImageLoading] = useState(false);
+
+    useEffect(()=>{
+      if(userImage){
+        previewFile(userImage)
+      }
+    },[userImage])
+
+    const dispatch = useDispatch();
 
     const handleFileChange = (event) => {
         const file = event.target.files[0];
         if (file) {
             setUserImage(file)
+            previewFile(file)
         }
     }
 
+    const previewFile = (file) => {
+      const reader = new FileReader()
+      reader.readAsDataURL(file)
+      reader.onloadend = () => {
+        setPreviewSource(reader.result)
+      }
+    }
+
     const uploadImage =()=>{
+      if(userImage){
         setImageLoading(true);
-        
+        const formData = new FormData();
+        formData.append('displayPicture',userImage);
+       // console.log("FormData =>",formData);
+        dispatch(updateDisplayPicture(formData,token))
+        setUserImage("")
         setImageLoading(false);
+      }
+       
     }
   return (
     <div className='flex  mt-[3rem] bg-richblack-800 p-[2rem] rounded-lg px-8 justify-between items-center border-[1px] border-richblack-600'>
@@ -51,7 +78,10 @@ const ImageUploader = () => {
                 <IconBtn 
                 text={imageLoading ? "Uploading...":"Upload"}
                 onclick={uploadImage}
-                ></IconBtn> 
+                >
+                  {!imageLoading && (
+                  <FiUpload className="text-lg text-richblack-900" />
+                )}</IconBtn> 
            </p>
            
           </div>
