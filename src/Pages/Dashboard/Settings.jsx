@@ -11,9 +11,8 @@ import ChangePassword from './ChangePassword';
 import DeleteProfile from './DeleteProfile';
 import IconBtn from '../../components/Dashboard/Iconbtn';
 import ImageUploader from './ImageUploader';
-
-
-
+import {formatDate} from "../../utils/formatDate"
+import { updateProfile } from '../../services/operations/profileMethods';
 
 const Settings = () => {
   
@@ -25,26 +24,22 @@ const Settings = () => {
     {id:2,gender:"Female"},
     {id:3,gender:"Others"}]
 
-  
+    const formatDateToISO = (dateString) => {
+        const date = new Date(dateString);
+        return date.toISOString().split("T")[0]; // Converts to YYYY-MM-DD
+      };
+      
 
   const {validate,validateAll,setErrors,errors} = useValidation();
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const {loading, token, signupData} = useSelector((state)=>state.auth)
- 
-
-  const saveProfile=()=>{
-
-  }
+  const [saveLoading,setSaveLoading]= useState(false);
   
 
   const [data,setData] = useState({
-      fName:"",
-      lName:"",
-      email:"",
-      countryCode:"+91",
-      mobile:"",
+      
       gender:"",
       dob:"",
       about:"",
@@ -54,20 +49,37 @@ const Settings = () => {
   const handleChange =(e)=>{
 
     const {name,value} = e.target;
-    const error = validate(name,value,data);
-   // console.log("Name =>",name," Value =>",value)
 
-    setErrors((prevErrors) => ({
-        ...prevErrors,
-        [name]: error,
+    setData((prevData) => ({
+        ...prevData,
+        [name]: value, 
       }));
-     
-      // Update data state
-      setData((prevData) => ({
-          ...prevData,
-          [name]: value,
-      }));
-}
+  }
+  
+   
+  
+
+const saveProfile=()=>{
+    
+    if(data.gender !=="" || data.dob !=="" || data.about !==""){
+            console.log("Inside saveProfile =>",data);
+            setSaveLoading(true);
+            dispatch(updateProfile(data,token))
+
+            setData({
+                fName:"",
+                lName:"",
+                email:"",
+                contactNumber:"",
+                gender:"",
+                dob:"",
+                about:"",
+               
+            })
+            setSaveLoading(false);
+            console.log("Data =>",data)
+    }
+  }
 
   return (
 
@@ -86,7 +98,7 @@ const Settings = () => {
           
           <div className='flex w-[100%] justify-between'>
           <p className='font-bold text-lg'>Personal Details</p>
-          <IconBtn text="Save"></IconBtn>
+          <IconBtn text={saveLoading ? "Saving..." : "Save"} onclick={()=>saveProfile()}></IconBtn>
           </div>
            
             <div className='lg:mt-4 '>
@@ -99,20 +111,22 @@ const Settings = () => {
                                 // value={data.fName}
                                 defaultValue={user?.user?.firstName}
                                 onChange={(e)=>handleChange(e)}
-                                className='h-[40px] lg:w-[23rem]  rounded-lg bg-richblack-700 pl-2 border-b border-richblack-400 outline-none mt-1' 
+                                disabled
+                                className='h-[40px] lg:w-[23rem]  rounded-lg bg-richblack-600 pl-2 border-b border-richblack-200 outline-none mt-1' 
                                 placeholder='Enter first name'/>
-                                {errors.fName && <span className="text-[10px]  text-pink-1000">{errors.fName}</span>}
+                                {/* {errors.fName && <span className="text-[10px]  text-pink-1000">{errors.fName}</span>} */}
                         </div>
                         <div className='flex flex-col'>
                         <label className='flex text-sm'>Last Name <AiFillStar className='text-[5px]  text-pink-1000'/></label>
                         <input 
                             name="lName"
                             type="text"
+                            disabled
                             defaultValue={user?.user?.lastName}
                             onChange={(e)=>handleChange(e)}
-                            className='h-[40px] lg:w-[23rem]  rounded-lg bg-richblack-700 pl-2 border-b border-richblack-400 outline-none mt-1' 
+                            className='h-[40px] lg:w-[23rem]  rounded-lg bg-richblack-600 pl-2 border-b border-richblack-200 outline-none mt-1' 
                             placeholder='Enter last name'/>
-                            {errors.lName && <span className="text-[10px]  text-pink-1000">{errors.lName}</span>}
+                            {/* {errors.lName && <span className="text-[10px]  text-pink-1000">{errors.lName}</span>} */}
                         </div>
                     </div>
 
@@ -123,35 +137,13 @@ const Settings = () => {
                             <input 
                                 name="email" type="text"
                                 defaultValue={user?.user?.email}
+                                disabled
                                 onChange={(e)=>handleChange(e)}
-                                className='h-[40px]  lg:w-[23rem]  md:w-full sm:w-full  rounded-lg bg-richblack-700 pl-2 border-b border-richblack-400 outline-none mt-1' 
+                                className='h-[40px]  lg:w-[23rem]  md:w-full sm:w-full  rounded-lg bg-richblack-600 pl-2 border-b border-richblack-200 outline-none mt-1' 
                                 placeholder='Enter email address'/>
-                                {errors.email && <span className="text-[10px]  text-pink-1000">{errors.email}</span>}
+                                {/* {errors.email && <span className="text-[10px]  text-pink-1000">{errors.email}</span>} */}
                             </div>
                             <div className='flex flex-col'>
-                            <label className='flex text-sm'>Gender<AiFillStar className='text-[5px]  text-pink-1000'/></label>
-                            <select
-                                className="h-[40px] lg:w-[23rem]  rounded-lg bg-richblack-700 pl-2 border-b border-richblack-400 outline-none mt-1"
-                                type="text"
-                                defaultValue={user?.user?.gender}
-                                onChange={handleChange}
-                                name='gender'>
-                                    {/* <option value={data.gender}>
-                                        {data.gender}
-                                    </option> */}
-                                    {
-                                        genders && genders.map((gender) => (
-                                        <option key={gender.id} value={gender.gender} >
-                                            {`${gender.gender }`}
-                                        </option>
-                                        ))
-                                    }
-                        </select>
-                            </div>
-                    </div>
-
-                    <div className='flex lg:flex-row lg:justify-between md:flex-col sm:flex-col  gap-2 md:mb-2 sm:mb-2 lg:mb-4 '>
-                       <div className='flex flex-col'>
                         <label className='flex text-sm'>Phone Number<AiFillStar className='text-[5px]  text-pink-1000'/></label>
                         <div className="flex gap-2 lg:w-[23rem]">
 
@@ -176,29 +168,67 @@ const Settings = () => {
                             type="number" 
                             defaultValue={user?.user?.contactNumber ? 
                               String(user?.user?.contactNumber).slice(2) :""}                           
-                            name="mobile"
+                            name="contactNumber"
                             onChange={handleChange}
-                            className='h-[40px] lg:w-[23rem]  md:w-[18rem] sm:w-full rounded-lg bg-richblack-700 pl-2 border-b border-richblack-400 outline-none mt-1 no-arrows' 
+                            disabled
+                            className='h-[40px] lg:w-[23rem]  md:w-[18rem] sm:w-full rounded-lg bg-richblack-600 pl-2 border-b border-richblack-200 outline-none mt-1 no-arrows' 
                             placeholder='Enter mobile number'/>
                        
                         </div>
-                        {errors.mobile && <span className="text-[10px]  text-pink-1000">{errors.mobile}</span>}
+                        {/* {errors.mobile && <span className="text-[10px]  text-pink-1000">{errors.mobile}</span>} */}
+                        </div>
+                            
                     </div>
 
+                    <div className='flex lg:flex-row lg:justify-between md:flex-col sm:flex-col  gap-2 md:mb-2 sm:mb-2 lg:mb-4 '>
                     <div className='flex flex-col'>
+                            <label className='flex text-sm'>Gender<AiFillStar className='text-[5px]  text-pink-1000'/></label>
+                            <select
+                                className="h-[40px] lg:w-[23rem]  rounded-lg bg-richblack-700 pl-2 border-b border-richblack-400 outline-none mt-1 cursor-text"
+                                type="text"
+                                defaultValue={user?.user?.gender}
+                                onChange={handleChange}
+                                name='gender'>
+                                   
+                                    {
+                                        genders && genders.map((gender) => (
+                                        <option key={gender.id} value={gender.gender} >
+                                            {`${gender.gender }`}
+                                        </option>
+                                        ))
+                                    }
+                        </select>
+                            </div>
+
+                        <div className='flex flex-col'>
+                      
+                      <label className='flex text-sm'>Date of Birth<AiFillStar className='text-[5px]  text-pink-1000'/></label>
+                      <input 
+                          name="dob" type="date"
+                          defaultValue={user?.user?.dob ? formatDateToISO(user.user.dob) : ""}
+                          max={new Date().toISOString().split("T")[0]}
+                          onChange={(e)=>handleChange(e)}
+                          className='h-[40px]  lg:w-[23rem]  md:w-full sm:w-full  rounded-lg bg-richblack-700 pl-2 border-b border-richblack-400 outline-none mt-1 cursor-text' 
+                          placeholder='Enter dob'/>
+                          {/* {errors.email && <span className="text-[10px]  text-pink-1000">{errors.email}</span>} */}
+                      </div>
+
+                    
+                   
+           
+                                
+                     </div>    
+
+                     <div className='flex flex-col'>
                             <label className='flex text-sm'>About<AiFillStar className='text-[5px]  text-pink-1000'/></label>
                             <textarea 
                                 name="about" 
                                 defaultValue={user?.user?.additionalDetails?.about}
                                 onChange={(e)=>handleChange(e)}
-                                className='h-[40px] max-h-16 lg:w-[23rem]  rounded-lg bg-richblack-700 pl-2 border-b border-richblack-400 outline-none mt-1' 
+                                className='h-[40px] max-h-16 min-h-min w-full  rounded-lg bg-richblack-700 pl-2 border-b border-richblack-400 outline-none mt-1 cursor-text' 
                                 placeholder='Enter bio details...'/>
                                 
                     </div>
-                   
-            </div>    
-
-                   
 
             </div>
           

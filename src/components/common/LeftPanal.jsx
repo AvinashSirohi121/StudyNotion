@@ -13,13 +13,13 @@ const LeftPanal = () => {
     const {loading :authLoading} = useSelector((state)=>state.auth)
   //  console.log("user in LeftPanal =",user,profileLoading,authLoading);
   
-    if (profileLoading || authLoading) {
-        return (
-          <div className="grid min-h-[calc(100vh-3.5rem)] place-items-center">
-            <div className="spinner"></div>
-          </div>
-        )
-      }
+    // if (profileLoading || authLoading) {
+    //     return (
+    //       <div className="grid min-h-[calc(100vh-3.5rem)] place-items-center">
+    //         <div className="spinner"></div>
+    //       </div>
+    //     )
+    //   }
 
     return (
     <div className=''>

@@ -39,7 +39,7 @@ const MyProfile = () => {
           <IconBtn
           text="Edit"
           onclick={() => {
-            navigate("/dashboard/Settings")
+            navigate("/dashboard/settings")
           }}
         >
           <RiEditBoxLine />
@@ -55,7 +55,7 @@ const MyProfile = () => {
                   <IconBtn
                   text="Edit"
                   onclick={() => {
-                    navigate("/dashboard/Settings")
+                    navigate("/dashboard/settings")
                   }}
                 >
                   <RiEditBoxLine />
@@ -77,7 +77,7 @@ const MyProfile = () => {
           <IconBtn
           text="Edit"
           onclick={() => {
-            navigate("/dashboard/Settings")
+            navigate("/dashboard/settings")
           }}
         >
           <RiEditBoxLine />
