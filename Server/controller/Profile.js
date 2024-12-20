@@ -6,35 +6,38 @@ require("dotenv").config();
 exports.updateProfile = async(req,res)=>{
     try{
         console.log("Inside update profile");
-        const {gender,dob="",about="",contactNumber} = req.body;
-        // console.log("Gender =>",gender)
+        const {gender="",dob="",about=""} = req.body;
+         console.log("Data =>",req.body);
+         
         // console.log("About =>",about)
         // console.log("DOB =>",dob)
         // console.log("Contactnumber =>",contactNumber)
         const userId = req.user.id;
-        //console.log("Userid =>",userId)
-        if(!userId || !gender ||  !contactNumber){
-            return res.status(400).json({
-                success:false,
-                message:"Please provide all details"
-            })
-        }
+        console.log("Userid =>",userId)
+        // if(!userId || !gender ){
+        //     return res.status(400).json({
+        //         success:false,
+        //         message:"Please provide all details"
+        //     })
+        // }
 
         const userDetails = await User.findById(userId);
+        //console.log("User Details =>",userDetails)
         let profileId = userDetails.additionalDetails;
   
         let profileDetails = await Profile.findById(profileId)
-
-        profileDetails.dob=dob;
-        profileDetails.about= about;
-        profileDetails.gender = gender;
-        profileDetails.contactNumber = contactNumber;
+        if(dob !=="") profileDetails.dob=dob;
+        if(about !=="")  profileDetails.about= about;
+        if(gender !=="") profileDetails.gender = gender;
+       
         await profileDetails.save();
+
+        let updatedUserProfile =  await User.findById(userId).populate("additionalDetails");
 
         return res.status(200).json({
             success:true,
             message:"Profile updated successfully",
-            data:profileDetails
+            data: updatedUserProfile
         })
 
     }catch(error){
@@ -134,8 +137,8 @@ exports.updateDisplayPicture = async(req,res)=>{
         let image = await uploadImageToCloudinary(updatedPicture,process.env.FOLDER_NAME,1000,1000);
         console.log("Update Profile Picture =>",image);
 
-        let updateUser = await User.findByIdAndUpdate({_id:userId},{image:image.secure_url});
-        let updateProfile = await Profile.findByIdAndUpdate({_id:updateUser.additionalDetails},{image:image.secure_url});
+        let updateUser = await User.findByIdAndUpdate({_id:userId},{image:image.secure_url},{new:true});
+        let updateProfile = await Profile.findByIdAndUpdate({_id:updateUser.additionalDetails},{image:image.secure_url},{new:true});
 
         console.log("Updated User =>",updateUser)
         console.log("Updated Profile =>",updateProfile)
