@@ -11,7 +11,7 @@ const profileSlice = createSlice({
     initialState:initalState,
     reducers:{
         setUser(state,value){
-            console.log("User in profileSlice =>",state.user,value.payload);
+            //console.log("User in profileSlice =>",state.user,value.payload);
             state.user = value.payload;
         },
         setLoading(state, value) {
