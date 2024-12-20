@@ -64,7 +64,7 @@ function App() {
         <Route element={   <Dashboard />  }>
           {/* Route for all users */}
           <Route path="dashboard/my-profile" element={<MyProfile />} />
-          <Route path="dashboard/Settings" element={<Settings />} />
+          <Route path="dashboard/settings" element={<Settings />} />
           {/* Route only for Instructors */}
           {user?.accountType === ACCOUNT_TYPE.INSTRUCTOR && (
             <>
@@ -82,7 +82,7 @@ function App() {
               <Route path="dashboard/cart" element={<Cart />} />
             </>
           )}
-          {/* <Route path="dashboard/settings" element={<Settings />} /> */}
+         
         </Route>
 
 
