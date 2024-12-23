@@ -4,9 +4,10 @@ const Profile = require("../models/Profile");
 const otpGenerator = require("otp-generator");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const mailSender = require("../utils/mailSender")
+const {mailSender} = require("../utils/mailSender")
 require("dotenv").config();
 const { passwordUpdated } = require("../mail/templates/passwordUpdate");
+const {accountDeletionRequest} = require("../mail/templates/accountDeletionRequest")
 
 
 
@@ -285,6 +286,7 @@ exports.changePassword = async(req,res,next)=>{
     const id = req.user.id;
     // Get old password, new password, and confirm new password from req.body
     const {oldPass , newPass , confirmNewPass} = req.body;
+    console.log("Inide change Pass => id=",id," oldPass =",oldPass," newPass=",newPass," confirmNewPass=",confirmNewPass)
     
     if(!id || !oldPass || !newPass || !confirmNewPass){
       return res.status(400).json({
@@ -307,6 +309,7 @@ exports.changePassword = async(req,res,next)=>{
             message:"User not found for this ID"
           })
       }
+     // console.log("Existing pass =>",existingUser.password)
 
       // Validate old password
 		const isPasswordMatch = await bcrypt.compare(
@@ -317,10 +320,11 @@ exports.changePassword = async(req,res,next)=>{
 			// If old password does not match, return a 401 (Unauthorized) error
 			return res.status(401).json({
          success: false,
-          message: "The password is incorrect" 
+          message: "Old  password is incorrect" 
         });
 		}
 
+    console.log("Updatting pass...")
      // Update password
 		const encryptedPassword = await bcrypt.hash(newPass, 10);
 		const updatedUserDetails = await User.findByIdAndUpdate(
@@ -333,12 +337,11 @@ exports.changePassword = async(req,res,next)=>{
 		try {
 			const emailResponse = await mailSender(
 				updatedUserDetails.email,
-				passwordUpdated(
-					updatedUserDetails.email,
-					`Password updated successfully for ${updatedUserDetails.firstName} ${updatedUserDetails.lastName}`
-				)
+				`Password updated successfully for ${updatedUserDetails.firstName} ${updatedUserDetails.lastName}`,
+        passwordUpdated(updatedUserDetails.email,updatedUserDetails.firstName)
+				
 			);
-			console.log("Email sent successfully:", emailResponse.response);
+			//console.log("Email sent successfully:", emailResponse.response);
 		} catch (error) {
 			// If there's an error sending the email, log the error and return a 500 (Internal Server Error) error
 			console.error("Error occurred while sending email:", error);
@@ -367,4 +370,58 @@ exports.changePassword = async(req,res,next)=>{
   }
   
 
+}
+
+exports.accountDeletion = async(req,res,next)=>{
+  try{
+    const id = req.user.id;
+    // Get old password, new password, and confirm new password from req.body
+    
+    //Get user Data
+    let existingUser = await User.findById(id);
+    if(!existingUser){
+          return res.status(400).json({
+            success:false,
+            message:"User not found for this ID"
+          })
+      }
+      console.log("Inside account deletion Existing user =>",existingUser)
+
+
+
+    //////////// Send notification email /////////////////////
+		try {
+			const emailResponse = await mailSender(
+				existingUser.email,
+				`Account Deletion confirmation for ${existingUser.firstName} ${existingUser.lastName}`,
+        accountDeletionRequest(existingUser.email,`${existingUser.firstName} ${existingUser.lastName}`)
+				
+			);
+			//console.log("Email sent successfully:", emailResponse.response);
+		} catch (error) {
+			// If there's an error sending the email, log the error and return a 500 (Internal Server Error) error
+			console.error("Error occurred while sending email:", error);
+			return res.status(500).json({
+				success: false,
+				message: "Error occurred while sending change password  email",
+				error: error.message,
+			});
+		}
+    ///////////// mail sending code ends here///////////
+
+      return res.status(200).json({
+        success:true,
+        message:"Account deletion Process started",
+        // data:updatedUserDetails
+      })
+
+  }catch(error){
+    console.log("Error in deleting account =>", error.message);
+    console.log("Error in deleting account =>", error);
+    return res.status(500).json({
+      success: false,
+      error: error.message,
+      message: "Error occurred while deleting account",
+    });
+  }
 }
