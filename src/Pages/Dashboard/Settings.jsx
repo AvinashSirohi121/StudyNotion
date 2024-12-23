@@ -1,4 +1,4 @@
-import React ,{useState} from 'react'
+import React ,{useState,useEffect} from 'react'
 import EditButton from '../../components/Dashboard/EditButton'
 import { FaArrowLeft } from "react-icons/fa";
 import { Link, useNavigate } from 'react-router-dom';
@@ -17,27 +17,18 @@ import { updateProfile } from '../../services/operations/profileMethods';
 const Settings = () => {
   
   const user = useSelector((state)=>state.profile);
-
-
+  
   const genders =[
     {id:1,gender:"Male"},
     {id:2,gender:"Female"},
     {id:3,gender:"Others"}]
 
-    const formatDateToISO = (dateString) => {
-        const date = new Date(dateString);
-        return date.toISOString().split("T")[0]; // Converts to YYYY-MM-DD
-      };
-      
-
-  const {validate,validateAll,setErrors,errors} = useValidation();
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const {loading, token, signupData} = useSelector((state)=>state.auth)
+  const { token, } = useSelector((state)=>state.auth)
   const [saveLoading,setSaveLoading]= useState(false);
   
-
   const [data,setData] = useState({
       
       gender:"",
@@ -55,7 +46,8 @@ const Settings = () => {
         [name]: value, 
       }));
   }
-  
+
+ 
    
   
 
@@ -78,6 +70,7 @@ const saveProfile=()=>{
             })
             setSaveLoading(false);
             console.log("Data =>",data)
+            navigate(-1)
     }
   }
 
@@ -186,7 +179,7 @@ const saveProfile=()=>{
                             <select
                                 className="h-[40px] lg:w-[23rem]  rounded-lg bg-richblack-700 pl-2 border-b border-richblack-400 outline-none mt-1 cursor-text"
                                 type="text"
-                                defaultValue={user?.user?.gender}
+                                defaultValue={user?.user?.additionalDetails?.gender}
                                 onChange={handleChange}
                                 name='gender'>
                                    
@@ -204,8 +197,9 @@ const saveProfile=()=>{
                       
                       <label className='flex text-sm'>Date of Birth<AiFillStar className='text-[5px]  text-pink-1000'/></label>
                       <input 
+
                           name="dob" type="date"
-                          defaultValue={user?.user?.dob ? formatDateToISO(user.user.dob) : ""}
+                          defaultValue={user?.user?.additionalDetails.dob}
                           max={new Date().toISOString().split("T")[0]}
                           onChange={(e)=>handleChange(e)}
                           className='h-[40px]  lg:w-[23rem]  md:w-full sm:w-full  rounded-lg bg-richblack-700 pl-2 border-b border-richblack-400 outline-none mt-1 cursor-text' 
