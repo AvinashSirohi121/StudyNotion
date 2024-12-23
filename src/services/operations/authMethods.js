@@ -179,3 +179,58 @@ export const forgotPassword=()=>{
         
     }
 }
+export const changePassword=(token,data)=>{
+    return async(dispatch)=>{
+        const loadingToastId = toast.loading("Change password...", { duration: 3000 });
+        try {
+            dispatch(setLoading(true));  // Set loading state in Redux
+            const result = await apiConnector("POST",authEndpoints.CHANGE_PASSWORD_API,data,{
+                "Content-Type":"multipart/form-data",
+                    Authorization:`Bearer ${token}`
+            })
+            //console.log("Change password result =>",result);
+            if(result?.data?.data?.success){
+                //console.log("password updates successfully");
+                toast.success(`${result?.data?.data?.message}, Kindly check your email`,{duration:3000})
+            }
+        } catch (error) {
+               // console.log("Error while change Password =>",error);
+                toast.error(`${error?.response?.data?.message}`,{duration:3000})
+        }finally{
+            dispatch(setLoading(false));  // Reset loading state in Redux
+
+            // Dismiss the loading toast if it's still active
+            toast.dismiss(loadingToastId);
+            
+        }
+        
+    }
+}
+
+export const accountDeletion=(token)=>{
+    return async(dispatch)=>{
+        const loadingToastId = toast.loading("Account deletion...", { duration: 3000 });
+        try {
+            dispatch(setLoading(true));
+            const result = await apiConnector("POST",authEndpoints.ACCOUNT_DELETION,{},{
+                     "Content-Type":"multipart/form-data",
+                    Authorization:`Bearer ${token}`
+            });
+
+            console.log("Account Deletion result =>",result);
+            if(result?.data?.success){
+                toast.success(`${result?.data?.message}, Kindly check your email`,{duration:3000})
+            }
+
+        }catch(error){
+            // console.log("Error while change Password =>",error);
+            toast.error(`${error?.response?.data?.message}`,{duration:3000})
+        }finally{
+            dispatch(setLoading(false));  // Reset loading state in Redux
+
+            // Dismiss the loading toast if it's still active
+            toast.dismiss(loadingToastId);
+            
+        }
+    }
+}
