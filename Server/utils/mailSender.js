@@ -22,6 +22,6 @@ exports.mailSender = async (email, title, body) => {
     console.log("Email Info =>", info);
     return info;
   } catch (error) {
-    console.log("Error in Sending mail =>", error, message);
+    console.log("Error in Sending mail =>", error.message);
   }
 };
