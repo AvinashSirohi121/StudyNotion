@@ -5,7 +5,7 @@ const router = express.Router();
 const { auth, isInstructor, isStudent, isAdmin } = require("../middleware/authMiddleware");
 
 // Importing Controllers functions
-const { sendotp, signup, login, changePassword } = require("../controller/Auth");
+const { sendotp, signup, login, changePassword,accountDeletion } = require("../controller/Auth");
 const {resetPassword,resetPasswordToken }= require("../controller/ResetPassword");
 const {createCourse,getAllCourses,getCourseDetails} = require("../controller/Course");
 const {contactUs} = require("../controller/ContactUs");
@@ -27,6 +27,7 @@ router.post("/auth/sendotp", sendotp);
 router.post("/auth/signup", signup);
 router.post("/auth/login", login);
 router.post("/auth/changePassword" , auth ,changePassword);
+router.post("/auth/accountDeletion" , auth ,accountDeletion);
 
 // ********************************************************************************************************
 //                                      Reset Password
