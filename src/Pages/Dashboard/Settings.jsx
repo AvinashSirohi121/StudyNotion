@@ -56,7 +56,7 @@ const saveProfile=()=>{
     if(data.gender !=="" || data.dob !=="" || data.about !==""){
             console.log("Inside saveProfile =>",data);
             setSaveLoading(true);
-            dispatch(updateProfile(data,token))
+            dispatch(updateProfile(data,token,navigate))
 
             setData({
                 fName:"",

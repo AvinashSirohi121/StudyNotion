@@ -30,6 +30,9 @@ export const sendOTP =(email,navigate)=>{
             }catch(error){
                 console.log("Inside catch of sendOTP")
                 toast.error(error?.response?.data?.message || "An error occurred", { duration: 3000 });
+                if(error?.response?.data?.message=="Token is invalid"){
+                    dispatch(logout(navigate));
+                 }
             }finally{
                 dispatch(setLoading(false));  // Reset loading state in Redux
     
@@ -66,7 +69,7 @@ export const signUP =(data,otp,navigate)=>{
                 console.log("Inside success condition")
                 toast.success(`${result?.data?.message}`);
                
-                navigate('/dashboard')
+                navigate('/dashboard/my-profile')
                 
              }else {
                 console.log("Inside else block")
@@ -76,6 +79,9 @@ export const signUP =(data,otp,navigate)=>{
         } catch(error){
             console.log("Inside catchBlock")
             toast.error(error?.response?.data?.message || "An error occurred");
+            if(error?.response?.data?.message=="Token is invalid"){
+                dispatch(logout(navigate));
+             }
             if(error?.response?.data.code==0 || error?.response?.data.code==1){
                 //code 0=Cannot Login try again to redirect to signupscreen
                 //code 1=password and confirm password doesnot match redirect to signupscreen
@@ -138,6 +144,9 @@ export const login =(data,navigate)=>{
         } catch(error){
             console.log("Inside catchBlock")
             toast.error(error?.response?.data?.message || "An error occurred");
+            if(error?.response?.data?.message=="Token is invalid"){
+                dispatch(logout(navigate));
+             }
             if(error?.response?.data.code==0 || error?.response?.data.code==1){
                 //code 0=Cannot login try again to redirect to loginscreen
                 //code 1=provide all details redirect to loginscreen
@@ -174,12 +183,13 @@ export const logout=(navigate)=>{
     }
 }
 
-export const forgotPassword=()=>{
+export const forgotPassword=(navigate)=>{
     return (dispatch)=>{
         
     }
 }
-export const changePassword=(token,data)=>{
+
+export const changePassword=(token,data,navigate)=>{
     return async(dispatch)=>{
         const loadingToastId = toast.loading("Change password...", { duration: 3000 });
         try {
@@ -196,6 +206,9 @@ export const changePassword=(token,data)=>{
         } catch (error) {
                // console.log("Error while change Password =>",error);
                 toast.error(`${error?.response?.data?.message}`,{duration:3000})
+                if(error?.response?.data?.message=="Token is invalid"){
+                    dispatch(logout(navigate));
+                 }
         }finally{
             dispatch(setLoading(false));  // Reset loading state in Redux
 
@@ -207,7 +220,8 @@ export const changePassword=(token,data)=>{
     }
 }
 
-export const accountDeletion=(token)=>{
+export const accountDeletion=(token,navigate)=>{
+    
     return async(dispatch)=>{
         const loadingToastId = toast.loading("Account deletion...", { duration: 3000 });
         try {
@@ -223,8 +237,12 @@ export const accountDeletion=(token)=>{
             }
 
         }catch(error){
-            // console.log("Error while change Password =>",error);
+            console.log("Error while change Password =>",error);
             toast.error(`${error?.response?.data?.message}`,{duration:3000})
+            if(error?.response?.data?.message=="Token is invalid"){
+               dispatch(logout(navigate));
+            }
+            
         }finally{
             dispatch(setLoading(false));  // Reset loading state in Redux
 

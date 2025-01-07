@@ -7,6 +7,7 @@ import IconBtn from '../../components/Dashboard/Iconbtn';
 import toast from 'react-hot-toast';
 import { changePassword } from '../../services/operations/authMethods';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 const ChangePassword = () => {
 
@@ -19,6 +20,7 @@ const ChangePassword = () => {
   const {validate,validateAll,setErrors,errors} = useValidation();
   const {token} = useSelector((state =>state.auth))
   const dispatch = useDispatch()
+  const navigate = useNavigate();
 
   const [viewOldPassword,setViewOldPassword] = useState(false);
   const [password,setViewPassword] = useState(false);
@@ -72,7 +74,7 @@ const changePass =()=>{
         toast.error("New Password and Confirm New Password does not match",{duration:3000})
       }else{
         setChangeLoading(true);
-        dispatch(changePassword(token,{oldPass:data.oldPassword,newPass:data.password,confirmNewPass:data.confirmPassword}))
+        dispatch(changePassword(token,{oldPass:data.oldPassword,newPass:data.password,confirmNewPass:data.confirmPassword},navigate))
         setData({
           oldPassword:"",
           password:"",

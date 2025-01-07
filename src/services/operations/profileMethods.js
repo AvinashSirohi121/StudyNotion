@@ -3,8 +3,9 @@ import toast from 'react-hot-toast'
 import {setLoading,setUser,user} from "../../slices/profileSlice"
 import { apiConnector } from '../apiconnector';
 import {profileEndPoints} from "../api"
+import logout from "../../slices/authSlice"
 
-export const updateDisplayPicture =(formData,token)=>{
+export const updateDisplayPicture =(formData,token,navigate)=>{
 
     return async(dispatch)=>{
         const loadingToastId = toast.loading("Uploading display Image...");
@@ -33,6 +34,9 @@ export const updateDisplayPicture =(formData,token)=>{
         } catch (error) {
             console.log("Error in  updateDisplayPicture =>",error);
             toast.error(error?.response?.data?.message || "An error occurred", { duration: 3000 });
+            if(error?.response?.data?.message=="Token is invalid"){
+                dispatch(logout(navigate));
+             }
         }finally{
             dispatch(setLoading(false));  // Reset loading state in Redux
 
@@ -44,7 +48,7 @@ export const updateDisplayPicture =(formData,token)=>{
 
 }
 
-export const updateProfile=(data,token)=>{
+export const updateProfile=(data,token,navigate)=>{
     return async(dispatch)=>{
         const loadingToastId =  toast.loading("Updating profile...");
         try {
@@ -65,6 +69,9 @@ export const updateProfile=(data,token)=>{
         } catch (error) {
             console.log("Error while updateing profile =>",error);
             toast.error(`${error?.data?.message}`,{duration:3000})
+            if(error?.response?.data?.message=="Token is invalid"){
+                dispatch(logout(navigate));
+             }
         }finally{
             dispatch(setLoading(false));  // Reset loading state in Redux
 

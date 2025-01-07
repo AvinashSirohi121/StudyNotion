@@ -4,6 +4,7 @@ import IconBtn from '../../components/Dashboard/Iconbtn';
 import User from "../../assets/Images/user.png"
 import { FiUpload } from "react-icons/fi"
 import { updateDisplayPicture } from '../../services/operations/profileMethods';
+import { useNavigate } from 'react-router-dom';
 
 const ImageUploader = () => {
     const {user} = useSelector((state)=>state.profile);
@@ -19,6 +20,7 @@ const ImageUploader = () => {
     },[userImage])
 
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const handleFileChange = (event) => {
         const file = event.target.files[0];
@@ -42,7 +44,7 @@ const ImageUploader = () => {
         const formData = new FormData();
         formData.append('displayPicture',userImage);
        // console.log("FormData =>",formData);
-        dispatch(updateDisplayPicture(formData,token))
+        dispatch(updateDisplayPicture(formData,token,navigate))
         setUserImage("")
         setImageLoading(false);
       }

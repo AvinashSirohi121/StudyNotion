@@ -2,14 +2,15 @@ import React from 'react'
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { useDispatch, useSelector } from 'react-redux';
 import { accountDeletion } from '../../services/operations/authMethods';
+import { useNavigate } from 'react-router-dom';
 
 
 const DeleteProfile = () => {
   const {token} = useSelector((state)=>state.auth);
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   const deleteAccount=()=>{
-      dispatch(accountDeletion(token))
+      dispatch(accountDeletion(token,navigate))
   }
   return (
     <div className='flex mt-[3rem] bg-pink-900 p-[2rem] rounded-lg px-10 gap-5  border-[1px] border-pink-400'>
