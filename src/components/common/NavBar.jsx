@@ -3,19 +3,21 @@ import { Link, matchPath } from 'react-router-dom'
 import Logo from "../../assets/Logo/Logo-Full-Light.png"
 import {NavbarLinks} from  "../../data/navbar-links"
 import { useLocation } from 'react-router-dom'
-import { useSelector, } from 'react-redux'
+import { useDispatch, useSelector, } from 'react-redux'
 import { IoCart } from "react-icons/io5";
 import ProfileDropDown from '../core/Auth/ProfileDropDown'
-import {apiConnector} from "../../services/apiconnector"
-import {categories} from "../../services/api"
+
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
+import { fetchCategories } from '../../services/operations/courseMethods'
+import {setCourseCategory} from "../../slices/courseSlice"
 
 
 const NavBar = () => {
-
+    const dispatch = useDispatch();
      const {token} = useSelector((state)=>state.auth);
      const {user} = useSelector((state)=>state.profile);
      const {totalItems} = useSelector((state)=>state.cart);
+     const {courseCategory} = useSelector((state)=>state.course);
     //  console.log("Token =>",token)
     //  console.log("TotalItems =>",totalItems)
     //  console.log("User =>",user)
@@ -23,24 +25,16 @@ const NavBar = () => {
 
      },[user,token])
 
-    //  const sublink = [
-    //     {
-    //         title:"Python",
-    //         path:"/catalog/python"
-    //     },
-    //     {
-    //         title:"Web Development",
-    //         path:"/catalog/web-developement"
-    //     },
-    //  ]
+  
      const [sublinks,setSublinks] = useState([]);
 
     const fetchSubLinks = async()=>{
         try {
-            const result = await apiConnector("GET",categories.CATEGORIES_API);
-           // console.log("Printing sublinks result =>",result);
-            //console.log("Printing sublinks result =>",result.data);
-            setSublinks(result.data.data);
+
+            const result = await fetchCategories();
+            //console.log("Category Result in navbar  =>",result)
+            dispatch(setCourseCategory(result.data.data))
+            setSublinks(courseCategory);
         } catch (error) {
             console.log("Could not fetch the category list");
         }
