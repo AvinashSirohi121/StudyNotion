@@ -7,7 +7,7 @@ export const fetchCategories = async()=>{
         let result =[];
             try{
                 let data = await apiConnector("GET",courseEndPoints.COURSE_CATEGORIES_API);
-                console.log("FetchCategories data =>",data);
+                //console.log("FetchCategories data =>",data);
                 if(data){
                     result=data;
                     //toast.success("Categories fetch Successfully",{duration:3000})
