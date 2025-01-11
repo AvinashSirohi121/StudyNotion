@@ -8,7 +8,8 @@ require('dotenv').config();
 exports.createCourse = async (req, res, next) => {
   try {
     //get all data
-    let { courseName, courseDescription, whatYouWillLearn, price, tag, category,status,instructor,instructions } = req.body;
+    console.log("Inside create course")
+    let { courseName, courseDescription,courseImage, whatYouWillLearn, price, tag, category,status,instructor,instructions    } = req.body;
     const userId = req.user.id;
     
     // Get thumbnail image from request files
@@ -21,8 +22,8 @@ exports.createCourse = async (req, res, next) => {
     console.log("Category =>",category)
     console.log("Status =>",status)
     console.log("Instructor =>",instructor)
-    console.log("Instructions =>",instructions)
-    console.log("Thumbnail =>",thumbnail)
+    console.log("Instructions =>",instructions    )
+    console.log("Thumbnail =>",courseImage)
     // validation
     if (
       !courseName ||
