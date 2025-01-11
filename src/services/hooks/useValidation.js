@@ -91,6 +91,59 @@ const useValidation = () => {
         }
         break;
   
+       // Custom validation for course-related fields
+       case "courseName":
+        if (!value) {
+          error = "Course name cannot be empty.";
+        }
+        break;
+
+      case "courseDescription":
+        if (!value) {
+          error = "Course description cannot be empty.";
+        }
+        break;
+
+      case "price":
+        if (value < 0) {
+          error = "Price cannot be negative.";
+        }
+        if (!value && value !== 0) {
+          error = "Price cannot be empty.";
+        }
+        break;
+
+      case "category":
+        if (!value) {
+          error = "Category cannot be empty.";
+        }
+        break;
+
+      case "tag":
+        if (!value || !Array.isArray(value) || value.length === 0) {
+          error = "Tags cannot be empty.";
+        }
+        break;
+
+      case "courseImage":
+        if (!value) {
+          error = "Course image cannot be empty.";
+        }
+        break;
+
+      case "whatYouWillLearn":
+        if (!value) {
+          error = "Learning outcomes cannot be empty.";
+        }
+        break;
+
+      case "instruction":
+        if (!value || !Array.isArray(value) || value.length === 0) {
+          error = "Instructions cannot be empty.";
+        }
+        break;
+
+
       default:
         break;
     }
