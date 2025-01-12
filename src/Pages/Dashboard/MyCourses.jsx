@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState,useEffect} from 'react'
 import { MdEdit } from "react-icons/md";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import IconBtn from '../../components/Dashboard/Iconbtn';
@@ -6,9 +6,12 @@ import { useNavigate } from 'react-router-dom';
 import { CiCircleCheck } from "react-icons/ci";
 import { IoTimeOutline } from "react-icons/io5";
 import Popup from '../../components/common/Popup';
+import {getCourseData} from "../../services/operations/courseMethods"
+import { useSelector } from 'react-redux';
 
 const MyCourses = () => {
   const navigate = useNavigate();
+  const {token} = useSelector((state)=>state.auth);
 
   const handleCancel = () => {
     setIsPopupVisible(false); // Close the popup
@@ -97,6 +100,19 @@ const MyCourses = () => {
       }
     ]
     let myCourses=[]
+
+    const getData =async()=>{
+        try {
+            let data = await getCourseData(token);
+            console.log("CourseData =>",data);
+        } catch (error) {
+          console.log("Error while getting courseData =>",error);
+        }
+    }
+
+   useEffect(()=>{
+      getData();
+   },[]) 
   
   
   
