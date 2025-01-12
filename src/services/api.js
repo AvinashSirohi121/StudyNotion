@@ -31,6 +31,7 @@ export const studentEndPoints ={
 
 export const courseEndPoints ={
     GET_ALL_COURSE_API: BASE_URL + "/course/getAllCourses",
+    GET_ALL_INSTRUCTOR_COURSES_API: BASE_URL + "/course/getInstructorCourse",
     COURSE_DETAILS_API: BASE_URL + "/course/getCourseDetails",
     EDIT_COURSE_API: BASE_URL + "/course/editCourse",
     COURSE_CATEGORIES_API: BASE_URL + "/course/showAllCategories",
@@ -39,7 +40,7 @@ export const courseEndPoints ={
     CREATE_SUBSECTION_API: BASE_URL + "/course/addSubSection",
     UPDATE_SECTION_API: BASE_URL + "/course/updateSection",
     UPDATE_SUBSECTION_API: BASE_URL + "/course/updateSubSection",
-    GET_ALL_INSTRUCTOR_COURSES_API: BASE_URL + "/course/getInstructorCourses",
+    
     DELETE_SECTION_API: BASE_URL + "/course/deleteSection",
     DELETE_SUBSECTION_API: BASE_URL + "/course/deleteSubSection",
     DELETE_COURSE_API: BASE_URL + "/course/deleteCourse",

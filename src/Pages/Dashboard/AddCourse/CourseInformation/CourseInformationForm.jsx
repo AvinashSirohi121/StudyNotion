@@ -10,14 +10,14 @@ import { MdNavigateNext } from "react-icons/md";
 import Tags from "../../../../components/Dashboard/Tags"
 
 import Upload from '../../../../components/common/Upload';
-import {setCourseCategory} from "../../../../slices/courseSlice"
-import { setStep } from '../../../../slices/courseSlice';
+import {setCourse, setCourseCategory,setStep} from "../../../../slices/courseSlice"
 import { createCourse } from '../../../../services/operations/courseMethods';
+
 
 const CourseInformationForm = () => {
     //const { register,handleSubmit,setValue,getValue,formState:{errors}}= useForm();
 
-    const {course, editCourse,courseCategory} = useSelector((state)=>state.course);
+    const {step,course, editCourse,courseCategory} = useSelector((state)=>state.course);
     const {user} = useSelector((state)=>state.profile);
     const {token} = useSelector((state)=>state.auth);
     const navigate = useNavigate();
@@ -32,7 +32,7 @@ const CourseInformationForm = () => {
     
  
    
-    useEffect(() => {
+  useEffect(() => {
         const fetchData = async () => {
             if (courseCategory.length === 0) {
                 setLoading(true);
@@ -42,22 +42,22 @@ const CourseInformationForm = () => {
             }
         };
         fetchData();
-    }, []);
+  }, []);
 
-    const [courseData,setCourseData] = useState({
+  const [courseData,setCourseData] = useState({
         courseName:"",
         courseDescription:"",
         price:0,
         tag:[],
         whatYouWillLearn:"",
         category:"",
-        status:"draft",
+        status:"Draft",
         instructor:user._id,
         instructions:[],
         courseImage:""
-    })
+  })
 
-    const handleChange =(e)=>{
+  const handleChange =(e)=>{
         const {name,value} = e.target;
         const error = validate(name,value,courseData);
        // console.log("Name =>",name," Value =>",value)
@@ -75,10 +75,8 @@ const CourseInformationForm = () => {
           }));
           
           
-    }
+  }
     
-
-
   const handleTagsChange = (updatedTags) => {
     setFinalTags(updatedTags); // Store the tags in the parent component
     setCourseData((prevData)=>({
@@ -115,7 +113,7 @@ const CourseInformationForm = () => {
   }));
   }
 
-  const initiateCourse =()=>{
+  const initiateCourse =async()=>{
     if(courseData.courseName !=="" &&
       courseData.courseDescription !=="" &&
       courseData.price !=="" &&
@@ -126,12 +124,38 @@ const CourseInformationForm = () => {
       courseData.whatYouWillLearn !=="" &&
       courseData.instructor !==""
     ){
-      console.log("Course =>",courseData)
+      console.log("CoursImage=>",courseData.courseImage)
       const formData = new FormData();
-      formData.append('courseImage',courseData.courseImage);
-      console.log("FormData =>",formData)
-
-      dispatch(createCourse(courseData,formData,token,navigate));
+      
+     
+      formData.append('courseName',courseData?.courseName)
+      formData.append('courseDescription',courseData?.courseDescription)
+      formData.append('courseImage',courseData?.courseImage);
+      formData.append('whatYouWillLearn',courseData?.whatYouWillLearn)
+      formData.append('price',courseData?.price)
+      formData.append('tag',JSON.stringify(courseData?.tag))
+      formData.append('category',courseData?.category)
+      formData.append('status',courseData?.status)
+      formData.append('instructor',courseData?.instructor)
+      formData.append('instructions',JSON.stringify(courseData?.instructions))
+      
+      for (let [key, value] of formData.entries()) {
+        console.log(`${key}: ${value}`);
+      }
+      
+    
+      try {
+        const data = await createCourse(formData, token); // Call the API function
+        if (data) {
+          dispatch(setCourse(data));
+          dispatch(setStep(2));
+          console.log("Course Created:", data);
+        }
+      } catch (error) {
+        console.error("Failed to create course:", error);
+      }
+      
+      
       
 
    }
