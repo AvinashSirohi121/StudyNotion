@@ -7,7 +7,7 @@ const { auth, isInstructor, isStudent, isAdmin } = require("../middleware/authMi
 // Importing Controllers functions
 const { sendotp, signup, login, changePassword,accountDeletion } = require("../controller/Auth");
 const {resetPassword,resetPasswordToken }= require("../controller/ResetPassword");
-const {createCourse,getAllCourses,getCourseDetails} = require("../controller/Course");
+const {createCourse,getAllCourses,getCourseDetails,getInstructorCourse} = require("../controller/Course");
 const {contactUs} = require("../controller/ContactUs");
 const {capturePayment,verifySignature} = require("../controller/Payment");
 const {updateProfile,deleteAccount,getAllUserDetails,updateDisplayPicture,getEnrolledCourses}= require("../controller/Profile");
@@ -51,6 +51,7 @@ router.delete("/course/deleteSection",auth,isInstructor,deleteSection);
 router.post("/course/addSubSection",auth, isInstructor,createSubSection);
 router.delete("/course/deleteSubSection",auth, isInstructor,deleteSubSection);
 router.patch("/course/updateSubSection",auth,isInstructor,updateSubSection);
+router.get("/course/getInstructorCourse",auth,isInstructor,getInstructorCourse);
 
 // Course Routes to get Course Details (Can be used by Anyone)
 router.get("/course/getAllSubSection",getAllSubSection);
@@ -72,6 +73,7 @@ router.delete("/profile/deleteProfile",auth, deleteAccount);
 router.get("/profile/getUserDetails",auth,getAllUserDetails);
 router.put("/profile/updateDisplayPicture",auth,updateDisplayPicture)
 router.get("/profile/getEnrolledCourses",auth,getEnrolledCourses);
+
 
 
 // ********************************************************************************************************
