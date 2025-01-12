@@ -13,7 +13,7 @@ exports.createCourse = async (req, res, next) => {
     const userId = req.user.id;
     
     // Get thumbnail image from request files
-		const thumbnail = req?.files?.thumbnailImage;
+		const thumbnail = req?.files?.courseImage;
     console.log("CourseName =>",courseName)
     console.log("CourseDesc =>",courseDescription)
     console.log("WhatYouWillLearn =>",whatYouWillLearn)
@@ -22,8 +22,8 @@ exports.createCourse = async (req, res, next) => {
     console.log("Category =>",category)
     console.log("Status =>",status)
     console.log("Instructor =>",instructor)
-    console.log("Instructions =>",instructions    )
-    console.log("Thumbnail =>",courseImage)
+    console.log("Instructions =>",instructions)
+    console.log("Thumbnail =>",thumbnail)
     // validation
     if (
       !courseName ||
@@ -182,5 +182,31 @@ exports.getCourseDetails = async(req,res)=>{
       message:"Error in getting course Details",
       error:error.message
     })
+  }
+}
+
+exports.getInstructorCourse = async(req,res)=>{
+
+  try{
+
+    let {instructorId} = req.body;
+    console.log("InstructorId =>",instructorId);
+    if(!instructorId){
+      return res.status(400).json({
+        success:false,
+        message:"Kindly provide instructor Id"
+      })
+    }
+    
+    let instructorData = await User.findById(instructorId);
+    console.log("instructorData =>",instructorData);
+
+    // let courseData = await Course.findById({instructor:instructorId});
+    // console.log("CourseData =>",courseData);
+
+
+  }catch(error){
+    console.log("Error while getting Instructor Courses =>",error)
+    console.log("Error while getting Instructor Courses =>",error.message)
   }
 }
