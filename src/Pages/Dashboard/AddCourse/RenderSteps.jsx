@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { FaCheck  } from 'react-icons/fa';
 import CourseInformationForm from "./CourseInformation/CourseInformationForm"
@@ -8,7 +8,9 @@ import PublishCourse from "./Publish/PublishCourse"
 
 const RenderSteps = () => {
     const {step} = useSelector((state)=>state.course);
-
+   useEffect(()=>{
+        console.log("Step =>",step)
+   },[step])
     const steps=[
         {   
             id:1,
@@ -25,7 +27,7 @@ const RenderSteps = () => {
     ]
   return (
     <>
-         <div className="relative mb-2 flex w-full justify-center">
+      <div className="relative mb-2 flex w-full justify-center">
         {steps.map((item) => (
           <>
             <div
