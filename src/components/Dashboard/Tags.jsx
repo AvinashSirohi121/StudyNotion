@@ -14,7 +14,7 @@ const TagInput = ({ placeholder, onTagsChange }) => {
   // Handle key press (Enter, Space, Tab)
   const handleKeyDown = (e) => {
     if ((e.code === "Enter" || e.code === "Space" || e.code === "Tab") && tagInput.trim() !== "") {
-      const newTag = { id: `id-${Date.now()}`, name: tagInput.trim() };
+      const newTag = { id: `${Date.now()}`, name: tagInput.trim() };
       const updatedTags = [...tags, newTag];
       setTags(updatedTags);
       setTagInput(""); // Clear the input field
