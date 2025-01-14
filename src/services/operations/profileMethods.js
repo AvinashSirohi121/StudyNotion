@@ -34,7 +34,7 @@ export const updateDisplayPicture =(formData,token,navigate)=>{
         } catch (error) {
             console.log("Error in  updateDisplayPicture =>",error);
             toast.error(error?.response?.data?.message || "An error occurred", { duration: 3000 });
-            if(error?.response?.data?.message=="Token is invalid"){
+            if(error?.response?.data?.message=="Token is invalid or expired"){
                 dispatch(logout(navigate));
              }
         }finally{
@@ -69,7 +69,7 @@ export const updateProfile=(data,token,navigate)=>{
         } catch (error) {
             console.log("Error while updateing profile =>",error);
             toast.error(`${error?.data?.message}`,{duration:3000})
-            if(error?.response?.data?.message=="Token is invalid"){
+            if(error?.response?.data?.message=="Token is invalid or expired"){
                 dispatch(logout(navigate));
              }
         }finally{

@@ -30,7 +30,7 @@ export const sendOTP =(email,navigate)=>{
             }catch(error){
                 console.log("Inside catch of sendOTP")
                 toast.error(error?.response?.data?.message || "An error occurred", { duration: 3000 });
-                if(error?.response?.data?.message=="Token is invalid"){
+                if(error?.response?.data?.message=="Token is invalid or expired"){
                     dispatch(logout(navigate));
                  }
             }finally{
@@ -79,7 +79,7 @@ export const signUP =(data,otp,navigate)=>{
         } catch(error){
             console.log("Inside catchBlock")
             toast.error(error?.response?.data?.message || "An error occurred");
-            if(error?.response?.data?.message=="Token is invalid"){
+            if(error?.response?.data?.message=="Token is invalid or expired"){
                 dispatch(logout(navigate));
              }
             if(error?.response?.data.code==0 || error?.response?.data.code==1){
@@ -144,7 +144,7 @@ export const login =(data,navigate)=>{
         } catch(error){
             console.log("Inside catchBlock")
             toast.error(error?.response?.data?.message || "An error occurred");
-            if(error?.response?.data?.message=="Token is invalid"){
+            if(error?.response?.data?.message=="Token is invalid or expired"){
                 dispatch(logout(navigate));
              }
             if(error?.response?.data.code==0 || error?.response?.data.code==1){
@@ -206,7 +206,7 @@ export const changePassword=(token,data,navigate)=>{
         } catch (error) {
                // console.log("Error while change Password =>",error);
                 toast.error(`${error?.response?.data?.message}`,{duration:3000})
-                if(error?.response?.data?.message=="Token is invalid"){
+                if(error?.response?.data?.message=="Token is invalid or expired"){
                     dispatch(logout(navigate));
                  }
         }finally{
@@ -239,7 +239,7 @@ export const accountDeletion=(token,navigate)=>{
         }catch(error){
             console.log("Error while change Password =>",error);
             toast.error(`${error?.response?.data?.message}`,{duration:3000})
-            if(error?.response?.data?.message=="Token is invalid"){
+            if(error?.response?.data?.message=="Token is invalid or expired"){
                dispatch(logout(navigate));
             }
             
