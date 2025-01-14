@@ -18,7 +18,7 @@ exports.createCourse = async (req, res, next) => {
     console.log("CourseDesc =>",courseDescription)
     console.log("WhatYouWillLearn =>",whatYouWillLearn)
     console.log("Price =>",price)
-    console.log("tag =>",tag)
+    console.log("tag =>",tag,typeof tag)
     console.log("Category =>",category)
     console.log("Status =>",status)
     console.log("Instructor =>",instructor)
@@ -79,13 +79,13 @@ exports.createCourse = async (req, res, next) => {
       instructor: instructorDetails._id,
       whatYouWillLearn: whatYouWillLearn,
       price: price,
-      tag: tag,
+      tag: typeof tag === "string" ? JSON.parse(tag) : tag,
       category:categoryDetails._id,
       thumbNail: thumbNailImage.secure_url,
       status:status,
       instructor:instructor,
-      instructions:instructions,
-
+      instructions:typeof instructions === "string" ? JSON.parse(instructions) : instructions, 
+      dateOfCreation: new Date(),
     });
 
     // add course entry in user schema of instructor
@@ -185,28 +185,41 @@ exports.getCourseDetails = async(req,res)=>{
   }
 }
 
-exports.getInstructorCourse = async(req,res)=>{
+exports.getInstructorCourse = async(req,res,next)=>{
 
   try{
 
-    let {instructorId} = req.body;
-    console.log("InstructorId =>",instructorId);
-    if(!instructorId){
+    let instructorId = req.user.id;
+    //console.log("Instructor Id =>",instructorId)
+    
+    // let instructorData = await User.findById(instructorId);
+    // console.log("instructorData =>",instructorData);
+
+    let courseData = await Course.find({instructor:instructorId});
+    //console.log("CourseData =>",courseData);
+    
+    if(!courseData){
       return res.status(400).json({
         success:false,
-        message:"Kindly provide instructor Id"
+        message:"Error in getting Instructor courses",
+        
       })
     }
-    
-    let instructorData = await User.findById(instructorId);
-    console.log("instructorData =>",instructorData);
 
-    // let courseData = await Course.findById({instructor:instructorId});
-    // console.log("CourseData =>",courseData);
+    return res.status(200).json({
+      success:true,
+      message:"Instructor Courses",
+      data:courseData
+    })
 
 
   }catch(error){
     console.log("Error while getting Instructor Courses =>",error)
     console.log("Error while getting Instructor Courses =>",error.message)
+    return res.statu(500).json({
+      success:false,
+      message:"Error in getting Instructor course Details",
+      error:error.message
+    })
   }
 }
