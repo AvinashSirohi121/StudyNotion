@@ -23,13 +23,15 @@ exports.auth = async (req, res, next) => {
     }
     // verifying the token
     try {
-      const decode = await jwt.verify(token, process.env.JWT_SECRET);
+      //console.log("Befor decoding token =>",process.env.JWT_SECRET);
+      const decode =  jwt.verify(token, process.env.JWT_SECRET);
       //console.log("Decoded token =>", decode);
       req.user = decode; //<- putting token in req.user , there also in token we have set userId
     } catch (error) {
+      console.log("Error while decoding the token =>",error)
       return res.status(401).json({
         sucess: false,
-        message: "Token is invalid",
+        message: "Token is invalid or expired",
         error: error.message,
       });
     }
