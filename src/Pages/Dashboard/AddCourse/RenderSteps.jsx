@@ -9,7 +9,7 @@ import PublishCourse from "./Publish/PublishCourse"
 const RenderSteps = () => {
     const {step} = useSelector((state)=>state.course);
    useEffect(()=>{
-        console.log("Step =>",step)
+        //console.log("Step =>",step)
    },[step])
     const steps=[
         {   

@@ -45,13 +45,14 @@ router.post("/auth/reset-password", resetPassword)
 //*********************************************************************************************************
 
 router.post("/course/createCourse",auth,isInstructor,createCourse);
+router.get ("/course/getInstructorCourse",auth,isInstructor,getInstructorCourse);
 router.post("/course/addSection",auth,isInstructor,createSection);
 router.patch("/course/updateSection",auth,isInstructor,updateSection);
 router.delete("/course/deleteSection",auth,isInstructor,deleteSection);
 router.post("/course/addSubSection",auth, isInstructor,createSubSection);
 router.delete("/course/deleteSubSection",auth, isInstructor,deleteSubSection);
 router.patch("/course/updateSubSection",auth,isInstructor,updateSubSection);
-router.get("/course/getInstructorCourse",auth,isInstructor,getInstructorCourse);
+
 
 // Course Routes to get Course Details (Can be used by Anyone)
 router.get("/course/getAllSubSection",getAllSubSection);

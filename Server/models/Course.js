@@ -54,17 +54,27 @@ const courseSchema = new mongoose.Schema({
       ref: "User",
     },
   ],
-  tag:{
-    type:[String],
-    required:true,
-  },
+  tag: [
+    {
+      id: { type: String, required: true },
+      name: { type: String, required: true },
+    },
+  ],
   status: {
 		type: String,
 		enum: ["Draft", "Published"],
 	},
-  instructions: {
-		type: [String],
-	},
+  instructions: [
+    {
+      id: { type: String, required: true },
+      name: { type: String, required: true },
+    },
+  ],
+  dateOfCreation:{
+    type:Date,
+    default:Date.now()
+    
+  }
 });
 
 module.exports = mongoose.model("Course", courseSchema);

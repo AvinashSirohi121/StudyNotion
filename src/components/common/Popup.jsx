@@ -1,6 +1,6 @@
 import React from "react";
 
-const Popup = ({ title, message, isVisible, onCancel, onConfirm,btn1,btn2 }) => {
+const Popup = ({ title, message, isVisible, onCancel, onConfirm,btn1,btn2,data }) => {
   if (!isVisible) return null; // Do not render if not visible
 
   return (
@@ -10,7 +10,7 @@ const Popup = ({ title, message, isVisible, onCancel, onConfirm,btn1,btn2 }) => 
         <p className="mb-6">{message}</p>
         <div className="flex  space-x-4">
           <button
-              onClick={onConfirm}
+              onClick={()=>onConfirm(data)}
             className="bg-yellow-100  text-richblack-900 font-semibold py-2 px-4 rounded"
           >
             {btn1}
