@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react'
 import {useForm} from "react-hook-form";
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCategories } from '../../../../services/operations/courseMethods';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import useValidation from '../../../../services/hooks/useValidation';
 import { AiFillStar } from 'react-icons/ai';
 
@@ -10,7 +10,7 @@ import { MdNavigateNext } from "react-icons/md";
 import Tags from "../../../../components/Dashboard/Tags"
 
 import Upload from '../../../../components/common/Upload';
-import {setCourse, setCourseCategory,setStep} from "../../../../slices/courseSlice"
+import {setCourse, setCourseCategory,setStep,setEditCourse} from "../../../../slices/courseSlice"
 import { createCourse } from '../../../../services/operations/courseMethods';
 
 
@@ -22,28 +22,45 @@ const CourseInformationForm = () => {
     const {token} = useSelector((state)=>state.auth);
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const location = useLocation();
     const [loading,setLoading] = useState(false);
-    const [courseCategories,setCourseCategories]= useState([]);
     const {validate,validateAll,setErrors,errors} = useValidation();
     const [finalTags, setFinalTags] = useState([]);
     const [instruction, setInstruction] = useState("");
     const [instructions, setInstructions] = useState([]);
     const [courseImage,setCourseImage] = useState("");
-    
- 
-   
-  useEffect(() => {
-        const fetchData = async () => {
-            if (courseCategory.length === 0) {
-                setLoading(true);
-                let category = await fetchCategories();
-                dispatch(setCourseCategory(category.data.data));
-                setLoading(false);
-            }
-        };
-        fetchData();
-  }, []);
+    const previousPath = useRef(location.pathname);
 
+    //console.log("CourseCategory =>",courseCategory)
+
+    const data = useLocation();
+    const setEditableCourseData = (data) => {
+      //console.log("Inside setEditableCourseData =>", data);
+    
+      
+      // Update courseData with values from data, if present
+      setCourseData((prevState) => {
+        const categoryId = data?.category[0];
+        const categoryName = courseCategory.find((cat) => cat._id === categoryId)?.name || prevState.category;
+      //  console.log("Edited Category =>",categoryName)
+      return {
+        ...prevState,
+        courseName: data?.courseName || prevState.courseName,
+        courseDescription: data?.courseDescription || prevState.courseDescription,
+        price: data?.price || prevState.price,
+        tag: data?.tag || prevState.tag,
+        whatYouWillLearn: data?.whatYouWillLearn || prevState.whatYouWillLearn,
+        category: categoryId || prevState.category ,
+        status: data?.status || prevState.status,
+        instructor: data?.instructor || prevState.instructor,
+        instructions: data?.instructions || prevState.instructions,
+        courseImage: data?.courseImage || prevState.courseImage,
+      }
+    });
+      setInstructions(data?.instructions)
+    };
+    
+    
   const [courseData,setCourseData] = useState({
         courseName:"",
         courseDescription:"",
@@ -87,7 +104,7 @@ const CourseInformationForm = () => {
 
   const addInstruction =()=>{
     if(instruction !==""){
-        let instructionData ={ id: `id-${Date.now()}`, name: instruction.trim() };
+        let instructionData ={ id: `${Date.now()}`, name: instruction.trim() };
         //console.log("Instructions =>",instructionData);
         let updatedInstruction = [...instructions,instructionData];
         setInstructions(updatedInstruction);
@@ -106,15 +123,25 @@ const CourseInformationForm = () => {
   }
 
   const setImagepath =(Image)=>{
-    console.log("CourseImage =>",URL.createObjectURL(Image));
+    console.log("setting Image in courseInformation =<",Image)
+    if(Image){
+      console.log("CourseImage =>",URL.createObjectURL(Image));
     setCourseData((prevData) => ({
       ...prevData,
       courseImage: Image,
   }));
+    }
+    
   }
 
   const initiateCourse =async()=>{
-    if(courseData.courseName !=="" &&
+    console.log("Edit Course =>",editCourse)
+    // if(editCourse){
+    //   console.log("Calling befor Saving edited course");
+    //   console.log("CourseData =>",courseData);
+    // }
+    // else{ 
+      if (courseData.courseName !=="" &&
       courseData.courseDescription !=="" &&
       courseData.price !=="" &&
       courseData.courseImage !=="" &&
@@ -150,6 +177,9 @@ const CourseInformationForm = () => {
           dispatch(setCourse(data));
           dispatch(setStep(2));
           console.log("Course Created:", data);
+          if(editCourse==true){
+            dispatch(setEditCourse(false));
+          }
         }
       } catch (error) {
         console.error("Failed to create course:", error);
@@ -158,9 +188,29 @@ const CourseInformationForm = () => {
       
       
 
-   }
+  //  }
+  }
    
   }
+
+  useEffect(() => {
+    const fetchData = async () => {
+        if (courseCategory.length === 0) {
+            setLoading(true);
+            let category = await fetchCategories();
+            dispatch(setCourseCategory(category.data.data));
+            setLoading(false);
+        }
+    };
+    fetchData();
+    if(data.state){
+      setEditableCourseData(data.state);
+    }
+
+}, [data]);
+
+
+
 
   return (
     <div className='text-white'>
@@ -201,6 +251,7 @@ const CourseInformationForm = () => {
               <label className='flex tracking-wider  text-sm'>Course Category <AiFillStar className='text-[5px] ml-2 text-pink-1000'/></label>
                 <select 
                   name="category"
+                  value={courseData.category}
                   onChange={(e)=>handleChange(e)}
                 className='bg-richblack-800 h-[40px] rounded-lg'>
                   <option 
@@ -258,6 +309,8 @@ const CourseInformationForm = () => {
             <Upload 
              title="Browse Image"
              type="image"
+             editCourse={editCourse}
+             imagePath={data?.state?.thumbNail}
              setImagepath={setImagepath}/>
               {errors.courseImage && <span className="text-[10px]  text-pink-1000">{errors.courseImage}</span>}
 
