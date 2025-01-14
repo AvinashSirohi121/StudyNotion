@@ -50,19 +50,22 @@ export const getCourseData =async(token)=>{
 
     let loadingId = toast.loading("Getting CourseData")
     try {
-        console.log("token =>",token);
-        const response = await apiConnector("GET", courseEndPoints.GET_ALL_COURSE_API, {
+        //console.log("Data=>",data," =>token =>",token);
+        const response = await apiConnector("GET", courseEndPoints.GET_ALL_INSTRUCTOR_COURSES_API,"",{
             "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${token}`,
           });
-        console.log("Instructor Courses =>",response);
+        //console.log("Instructor Courses =>",response);
         result = response?.data?.data;
         return result
+       
         
     } catch (error) {
-        console.log("Error while getting CourseData =>",error)
+        //console.log("Error while getting CourseData =>",error);
         toast.error(`${error?.response?.data?.message}`,{duration:3000})
+        throw error;
     }finally{
-        toast.dismiss(loadingId)
+        toast.dismiss(loadingId);
+       
     }
 }  
