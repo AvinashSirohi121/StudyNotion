@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { AiFillStar } from "react-icons/ai";
 import { MdOutlineCancel } from "react-icons/md";
 
-const TagInput = ({ placeholder, onTagsChange }) => {
+const TagInput = ({ placeholder, onTagsChange,courseTags }) => {
   const [tagInput, setTagInput] = useState("");
   const [tags, setTags] = useState([]);
+
+  // console.log("CourseTags =>",courseTags)
+  // console.log("Tags =>",tags)
 
   // Handle input value change
   const handleInputChange = (e) => {
@@ -13,7 +16,7 @@ const TagInput = ({ placeholder, onTagsChange }) => {
 
   // Handle key press (Enter, Space, Tab)
   const handleKeyDown = (e) => {
-    if ((e.code === "Enter" || e.code === "Space" || e.code === "Tab") && tagInput.trim() !== "") {
+    if ((e.code === "Enter" ||  e.code === "Tab") && tagInput.trim() !== "") {
       const newTag = { id: `${Date.now()}`, name: tagInput.trim() };
       const updatedTags = [...tags, newTag];
       setTags(updatedTags);
@@ -28,6 +31,13 @@ const TagInput = ({ placeholder, onTagsChange }) => {
     setTags(updatedTags);
     onTagsChange(updatedTags); // Send updated tags back to the parent
   };
+
+  useEffect(()=>{
+    if(courseTags){
+      setTags(courseTags)
+    }
+     
+  },[courseTags])
 
   return (
     <div className='flex flex-col mt-4'>
