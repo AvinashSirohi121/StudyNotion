@@ -31,7 +31,7 @@ const RenderSteps = () => {
         {steps.map((item) => (
           <>
             <div
-              className="flex flex-col items-center "
+              className="flex flex-col items-center  "
               key={item.id}
             >
               <button
@@ -66,7 +66,7 @@ const RenderSteps = () => {
         {steps.map((item) => (
           <>
             <div
-              className="flex min-w-[130px] flex-col items-center gap-y-2"
+              className="flex lg:min-w-[130px] md:min-w-[120px] flex-col items-center gap-y-2"
               key={item.id}
             >
               

@@ -16,7 +16,7 @@ import Settings from "./Pages/Dashboard/Settings";
 import Instructor from "./Pages/Dashboard/Instructor"
 import MyCourses from "./Pages/Dashboard/MyCourses";
 import AddCourse from "./Pages/Dashboard/AddCourse/AddCourse"
-import EditCourse from "./Pages/Dashboard/EditCourse"
+import EditCourse from "./Pages/Dashboard/EditCourse/EditCourse"
 import EnrolledCourses from "./Pages/Dashboard/EnrolledCourses"
 import Cart from "./Pages/Dashboard/Cart"
 import { setUser } from "./slices/profileSlice";

@@ -10,7 +10,7 @@ exports.auth = async (req, res, next) => {
     // console.log("INside aut middleware")
     // console.log("Token in body=>",req?.body?.token)
     // console.log("Token in cookies =>",req?.cookies?.token)
-    // console.log("Token in header =>",req?.header("Authorization")?.replace("Bearer ", ""));
+    //console.log("Token in header =>",req?.header("Authorization")?.replace("Bearer ", ""));
     //console.log("Req =>",req)
     let token = req?.cookies?.token ||  req?.body?.token || req?.header("Authorization")?.replace("Bearer ", "");
     //console.log("Token inside Auth Middileware= >",token)
@@ -25,7 +25,7 @@ exports.auth = async (req, res, next) => {
     try {
       //console.log("Befor decoding token =>",process.env.JWT_SECRET);
       const decode =  jwt.verify(token, process.env.JWT_SECRET);
-      //console.log("Decoded token =>", decode);
+     // console.log("Decoded token =>", decode);
       req.user = decode; //<- putting token in req.user , there also in token we have set userId
     } catch (error) {
       console.log("Error while decoding the token =>",error)
