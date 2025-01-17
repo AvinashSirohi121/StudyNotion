@@ -216,10 +216,98 @@ exports.getInstructorCourse = async(req,res,next)=>{
   }catch(error){
     console.log("Error while getting Instructor Courses =>",error)
     console.log("Error while getting Instructor Courses =>",error.message)
-    return res.statu(500).json({
+    return res.status(500).json({
       success:false,
       message:"Error in getting Instructor course Details",
       error:error.message
     })
   }
+}
+
+exports.deleteCourse = async(req,res,next)=>{
+      try{
+        let {courseId} = req.body;
+        
+        console.log("Deleting courseId =>",req.body);
+        console.log("Deleting courseId =>",courseId);
+
+        let validCourse = await Course.findById(courseId);
+        console.log("Valid Course =>",validCourse);
+
+        if(!validCourse){
+          return res.status(400).json({
+            success:false,
+            message:"This is not a vaild Course"
+          })
+        }
+        console.log("If here then valid course")
+        let deleteCourse = await Course.findByIdAndDelete(courseId);
+        console.log("CourseID =>",deleteCourse);
+         // Fetch the updated courses for the instructor
+          let instructorId = req.user.id;
+          let updatedCourses = await Course.find({ instructor: instructorId });
+
+          return res.status(200).json({
+            success: true,
+            message: "Course deleted successfully",
+            data: updatedCourses, // Send updated courses back to the frontend
+          });
+
+      }catch(error){
+        console.log("Error in deleting Course COntroller =>",error)
+        console.log("Error in deleting Course COntroller =>",error.message);
+
+        return res.status(500).json({
+          success:false,
+          message:"Error in deleting Course",
+          error:error.message
+        })
+      }
+}
+
+exports.editCourse = async(req,res,next)=>{
+    try{
+      console.log("ReqBody =>",req.body)
+      let  {courseId } = req.body;
+     // const userId = req.user.id;
+      
+       console.log("CourseID =>",courseId);
+
+      // console.log("CourseName =>",courseName)
+      // console.log("CourseDesc =>",courseDescription)
+      // console.log("WhatYouWillLearn =>",whatYouWillLearn)
+      // console.log("Price =>",price)
+      // console.log("tag =>",tag,typeof tag)
+      // console.log("Category =>",category)
+      // console.log("Status =>",status)
+      // console.log("Instructor =>",instructor)
+      // console.log("Instructions =>",instructions)
+      
+
+      let thumbNail = req?.files?.courseImage;
+      console.log("ThumbNail =>",thumbNail);
+      
+      // if( !courseName || !courseDescription || !courseImage ||
+      //     !whatYouWillLearn || !price || !tag ||  tag==[] || !category || 
+      //     !status || !instructor || !instructions || instructions==[]
+      // ){
+      //     return res.status(400).json({
+      //       success:false,
+      //       message:"Please provide all details"
+      //     })
+      // }
+
+     
+
+
+    }catch(error){
+      console.log("Error in editing course =>",error)
+      console.log("Error in editing course =>",error.message)
+
+      return res.status(500).json({
+        success:false,
+        message:"Error while editing Course",
+        error:error.message
+      })
+    }
 }
