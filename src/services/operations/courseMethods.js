@@ -42,8 +42,7 @@ export const createCourse = async(formData,token) =>{
     } finally {
       toast.dismiss(loadingToastId);
     }
-  };
-  
+};
 
 export const getCourseData =async(token)=>{
     let result=[];
@@ -69,3 +68,54 @@ export const getCourseData =async(token)=>{
        
     }
 }  
+
+export const editCourses = async(token,formData)=>{
+
+  let result=[];
+  let toastId = toast.success("Editing Course",{duration:3000})
+  try {
+    console.log("Editing CourseId =>",formData);
+    let response = await apiConnector("POST",courseEndPoints.EDIT_COURSE_API,formData, {
+      "Content-Type": "multipart/form-data",
+      Authorization: `Bearer ${token}`,
+    });
+
+   console.log("Editing Course Response =>",response);
+   result=response?.data?.data;
+   return result;
+   
+    
+  } catch (error) {
+      console.log("Error in editing Course =>",error)
+      toast.error(`${error?.response?.data?.message}`,{duration:3000})
+      throw error
+  }finally{
+    toast.dismiss(toastId);
+  }
+}
+
+export const deleteCourse = async(token,courseId)=>{
+
+  let result=[];
+  let toastId = toast.success("Deleting Course",{duration:3000})
+  try {
+    console.log("Deleting CourseId =>",courseId);
+    let response = await apiConnector("POST",courseEndPoints.DELETE_COURSE_API,courseId,{
+      "Content-Type": "multipart/form-data",
+      Authorization: `Bearer ${token}`,
+    });
+
+   console.log("Deleting Course Response =>",response);
+   result=response?.data?.data;
+   return result;
+   
+    
+  } catch (error) {
+      console.log("Error in deleting Course =>",error)
+      toast.error(`${error?.response?.data?.message}`,{duration:3000})
+      throw error
+  }finally{
+    toast.dismiss(toastId);
+  }
+}
+
