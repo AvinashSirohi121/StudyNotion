@@ -7,7 +7,7 @@ const { auth, isInstructor, isStudent, isAdmin } = require("../middleware/authMi
 // Importing Controllers functions
 const { sendotp, signup, login, changePassword,accountDeletion } = require("../controller/Auth");
 const {resetPassword,resetPasswordToken }= require("../controller/ResetPassword");
-const {createCourse,getAllCourses,getCourseDetails,getInstructorCourse} = require("../controller/Course");
+const {createCourse,getAllCourses,getCourseDetails,getInstructorCourse,deleteCourse,editCourse} = require("../controller/Course");
 const {contactUs} = require("../controller/ContactUs");
 const {capturePayment,verifySignature} = require("../controller/Payment");
 const {updateProfile,deleteAccount,getAllUserDetails,updateDisplayPicture,getEnrolledCourses}= require("../controller/Profile");
@@ -45,6 +45,8 @@ router.post("/auth/reset-password", resetPassword)
 //*********************************************************************************************************
 
 router.post("/course/createCourse",auth,isInstructor,createCourse);
+router.post("/course/deleteCourse",auth,isInstructor,deleteCourse);
+router.post("/course/editCourse",auth,isInstructor,editCourse);
 router.get ("/course/getInstructorCourse",auth,isInstructor,getInstructorCourse);
 router.post("/course/addSection",auth,isInstructor,createSection);
 router.patch("/course/updateSection",auth,isInstructor,updateSection);
