@@ -6,11 +6,11 @@ import { useNavigate } from 'react-router-dom';
 import { CiCircleCheck } from "react-icons/ci";
 import { IoTimeOutline } from "react-icons/io5";
 import Popup from '../../components/common/Popup';
-import {getCourseData} from "../../services/operations/courseMethods"
+import {getCourseData,deleteCourse,} from "../../services/operations/courseMethods"
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import {logout} from "../../services/operations/authMethods"
-import { setCourse,setEditCourse } from '../../slices/courseSlice';
+import { setCourse,setEditCourse,setStep } from '../../slices/courseSlice';
 import {formatDate} from "../../utils/formatDate"
 import{ formatTime} from "../../utils/formatDate"
 
@@ -19,16 +19,16 @@ const MyCourses = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const {token} = useSelector((state)=>state.auth);
-  const {course,editCourse} = useSelector((state)=>state.course)
-  const [course11,setmyCourse] = useState(course);
+  const {course,editCourse,} = useSelector((state)=>state.course)
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [courseData,setCourseData] = useState("");
 
   useEffect(() => {
+   // console.log("Inside useEffect of MyCourse =>",course)
     const fetchCourseData = async () => {
       try {
-        const data = await getCourseData(token);
-        console.log("CourseData =>", data);
+        let data = await getCourseData(token);
+        //console.log("CourseData =>", data);
         if (data) {
           dispatch(setCourse(data));
         }
@@ -40,10 +40,10 @@ const MyCourses = () => {
       }
     };
 
-    if (!course) {
+    
       fetchCourseData();
-    }
-  }, [course, token, navigate]); // Add necessary dependencies
+    
+  }, [token, navigate]); // Add necessary dependencies
  
 
   const handleCancel = () => {
@@ -51,24 +51,39 @@ const MyCourses = () => {
     console.log("Action cancelled");
   };
 
-  const handleConfirm = (data) => {
-    setIsPopupVisible(false); // Close the popup
-    console.log("Action confirmed => delelte Course Id =>",data);
-
-    // Add your confirmation logic here
-  };
+  const handleConfirm = (courseId) => {
+      setIsPopupVisible(false); // Close the popup
+      deleteCourses(courseId);
+    };
 
   const editCourseButton =(course)=>{
     console.log("Inside editCourseButton")
-      dispatch(setEditCourse(true));
-      navigate("/dashboard/add-course",{state:course})
+      dispatch(setStep(1));
+      // dispatch(setEditCourse(true));
+      navigate(`/dashboard/edit-course/${course._id}`,{state:course})
 
 
   }
 
-  const deleteCourse =(course)=>{
+  const deleteButton =(course)=>{
     setIsPopupVisible(true);
     setCourseData(course._id)
+  }
+
+  const deleteCourses =async(courseId)=>{
+    console.log("Action confirmed => delelte Course Id =>", courseId);
+    try{
+      const formData = new FormData();
+      formData.append("courseId",courseId);
+      let response = await deleteCourse(token,formData);
+      console.log("Deleting Course Response =>",response);
+      dispatch(setCourse(response))
+    }catch(error){
+      console.log("Error while deleting course =>", error);
+      if (error?.response?.data?.message === "Token is invalid or expired") {
+        dispatch(logout(navigate));
+      }
+    }
   }
   
   
@@ -90,9 +105,9 @@ const MyCourses = () => {
         <div className='flex  mt-[3rem] bg-richblack-500 p-3 gap-3 rounded-t-md px-4  items-center border-[1px] border-richblack-600 justify-evenly'>
           <div className='w-[60%] m'>Courses</div>
           <div className='w-[40%] flex justify-between'>
-          <div className='min-w-[15%]'>Duration</div>
-          <div className='min-w-[15%] mr-[10px]'>Price</div>
-          <div className='min-w-[10%] mr-[40px]'>Action</div>
+          <div className='md:hidden lg:block min-w-[15%]'>Duration</div>
+          <div className='min-w-[15%] md:ml-[4rem] lg:mr-[4rem]'>Price</div>
+          <div className='min-w-[10%] lg:mr-[3rem] md:mr-[1rem]'>Action</div>
           </div>
           
         </div>
@@ -109,7 +124,7 @@ const MyCourses = () => {
                       <div className='flex flex-col'>
                       <p className='flex  gap-2 items-center font-bold text-lg'>{course?.courseName} </p>
                         {/* <p className='text-sm text-richblack-400 flex gap-2 italic font-thin mt-1 '>by -<p className=' text-yellow-50'> {course?.instructor}</p></p></p> */}
-                      <p className='text-richblack-100 text-xs '>{`${course?.courseDescription.slice(0,70)}...`}</p>
+                      <p className='text-richblack-100 text-xs lg:w-[100%] md:w-[90%]'>{`${course?.courseDescription.slice(0,70)}...`}</p>
                       <p className='text-richblack-100 text-xs mt-1'>Created: {`${formattedDate} | ${formattedTime}`} </p>
                       {course?.status==="published" ? 
                         <div className='text-caribbeangreen-100 text-xs mt-1 flex gap-1 bg-caribbeangreen-800 w-[5rem] p-1 rounded-2xl justify-center '>
@@ -123,12 +138,12 @@ const MyCourses = () => {
                       </div>
                   </div>
         
-          <p className='flex  gap-2 items-center w-[15%] '>{course.duration}</p>
+          <p className='md:hidden lg:block flex  gap-2 items-center w-[15%] '>{course.duration}</p>
           <p className='flex  gap-2 items-center w-[15%]  text-yellow-25'>{course?.price && parseInt(course?.price) !== 0 ? `₹ ${(course?.price).toFixed(2)}` : " Free"}</p>
           <div className='flex  gap-4 items-center w-[15%]  justify-center text-xl'>
             <MdEdit className='hover:text-yellow-50 cursor-pointer' 
                   onClick={()=>editCourseButton(course)} />
-            <RiDeleteBin5Line className='hover:text-pink-1000 cursor-pointer' onClick={()=> deleteCourse(course)} />
+            <RiDeleteBin5Line className='hover:text-pink-1000 cursor-pointer' onClick={()=> deleteButton(course)} />
           </div>
           
               </div>
