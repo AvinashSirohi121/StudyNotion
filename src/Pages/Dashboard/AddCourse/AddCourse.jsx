@@ -1,7 +1,20 @@
-import React from 'react'
+import React ,{useEffect} from 'react'
 import RenderSteps from './RenderSteps'
+import { useDispatch } from 'react-redux'
+import { useLocation } from 'react-router-dom';
+import { setEditCourse } from '../../../slices/courseSlice';
 
 const AddCourse = () => {
+
+  const dispatch = useDispatch();
+  const location = useLocation();
+
+  useEffect(()=>{
+    if (location.pathname.includes("/dashboard/add-course")) {
+      dispatch(setEditCourse(false));
+    }
+  },[dispatch, location.pathname])
+
   return (
     <div className="flex w-full items-start gap-x-6">
     <div className="flex flex-1 flex-col">
@@ -13,7 +26,7 @@ const AddCourse = () => {
       </div>
     </div>
     {/* Course Upload Tips */}
-    <div className="sticky top-10  max-w-[400px] flex-1 rounded-md border-[1px] border-richblack-700 bg-richblack-800 p-6 xl:block">
+    <div className="sticky top-10 md:hidden lg:block  max-w-[400px] flex-1 rounded-md border-[1px] border-richblack-700 bg-richblack-800 p-6 xl:block">
       <p className="mb-8 text-lg text-richblack-5">⚡ Course Upload Tips</p>
       <ul className="ml-5 list-item list-disc space-y-4 text-xs text-richblack-5">
         <li>Set the Course Price option or make it free.</li>
