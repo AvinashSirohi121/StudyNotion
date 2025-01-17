@@ -97,6 +97,16 @@ const useValidation = () => {
           error = "Course name cannot be empty.";
         }
         break;
+       case "section":
+        if (!value) {
+          error = "Section name cannot be empty.";
+        }
+        break;
+       case "subSection":
+        if (!value) {
+          error = "SubSection name cannot be empty.";
+        }
+        break;
 
       case "courseDescription":
         if (!value) {
