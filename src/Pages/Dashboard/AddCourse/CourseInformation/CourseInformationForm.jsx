@@ -208,6 +208,7 @@ const CourseInformationForm = () => {
           if (data) {
             dispatch(setCourse(data));
             dispatch(setStep(2));
+
             console.log("Course Edited:", data);
             if(editCourse==true){
               dispatch(setEditCourse(false));

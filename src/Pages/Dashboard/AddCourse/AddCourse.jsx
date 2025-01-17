@@ -1,6 +1,6 @@
 import React ,{useEffect} from 'react'
 import RenderSteps from './RenderSteps'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom';
 import { setEditCourse } from '../../../slices/courseSlice';
 
@@ -8,6 +8,7 @@ const AddCourse = () => {
 
   const dispatch = useDispatch();
   const location = useLocation();
+  const {step} = useSelector((state)=>state.course);
 
   useEffect(()=>{
     if (location.pathname.includes("/dashboard/add-course")) {
@@ -26,6 +27,8 @@ const AddCourse = () => {
       </div>
     </div>
     {/* Course Upload Tips */}
+    {
+    step==1 && 
     <div className="sticky top-10 md:hidden lg:block  max-w-[400px] flex-1 rounded-md border-[1px] border-richblack-700 bg-richblack-800 p-6 xl:block">
       <p className="mb-8 text-lg text-richblack-5">⚡ Course Upload Tips</p>
       <ul className="ml-5 list-item list-disc space-y-4 text-xs text-richblack-5">
@@ -44,7 +47,8 @@ const AddCourse = () => {
         <li>Make Announcements to notify any important</li>
         <li>Notes to all enrolled students at once.</li>
       </ul>
-    </div>
+    </div>}
+    
   </div>
   )
 }

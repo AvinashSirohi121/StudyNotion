@@ -195,8 +195,19 @@ exports.getInstructorCourse = async(req,res,next)=>{
     // let instructorData = await User.findById(instructorId);
     // console.log("instructorData =>",instructorData);
 
-    let courseData = await Course.find({instructor:instructorId});
-    //console.log("CourseData =>",courseData);
+    // const courseDetails = await Course.findById({_id:courseId}).populate({path:"instructor",populate:{path:"additionalDetails"}}).populate("category").populate({path:"courseContent",populate:{path:"subSection"}}).exec();
+   
+    const courseData = await Course.find({ instructor: instructorId })
+      .populate({
+        path: "courseContent", // Populating the `courseContent` field
+        populate: {
+          path: "subSection", // Populating the `subSection` field inside `courseContent`
+        },
+      })
+      .populate("category") // Populating the `category` field
+      .exec();
+    // let courseData = await Course.find({instructor:instructorId}.populate({path:"courseContent",populate:{path:"subSection"}}).populate("category")).exec();
+    // //console.log("CourseData =>",courseData);
     
     if(!courseData){
       return res.status(400).json({
@@ -265,49 +276,74 @@ exports.deleteCourse = async(req,res,next)=>{
       }
 }
 
-exports.editCourse = async(req,res,next)=>{
-    try{
-      console.log("ReqBody =>",req.body)
-      let  {courseId } = req.body;
-     // const userId = req.user.id;
-      
-       console.log("CourseID =>",courseId);
+exports.editCourse = async (req, res, next) => {
+  try {
+    const { courseId,courseName, courseDescription,  price,tag, category, status,instructor,  instructions,  whatYouWillLearn } = req.body;
 
-      // console.log("CourseName =>",courseName)
-      // console.log("CourseDesc =>",courseDescription)
-      // console.log("WhatYouWillLearn =>",whatYouWillLearn)
-      // console.log("Price =>",price)
-      // console.log("tag =>",tag,typeof tag)
-      // console.log("Category =>",category)
-      // console.log("Status =>",status)
-      // console.log("Instructor =>",instructor)
-      // console.log("Instructions =>",instructions)
-      
-
-      let thumbNail = req?.files?.courseImage;
-      console.log("ThumbNail =>",thumbNail);
-      
-      // if( !courseName || !courseDescription || !courseImage ||
-      //     !whatYouWillLearn || !price || !tag ||  tag==[] || !category || 
-      //     !status || !instructor || !instructions || instructions==[]
-      // ){
-      //     return res.status(400).json({
-      //       success:false,
-      //       message:"Please provide all details"
-      //     })
-      // }
-
-     
-
-
-    }catch(error){
-      console.log("Error in editing course =>",error)
-      console.log("Error in editing course =>",error.message)
-
-      return res.status(500).json({
-        success:false,
-        message:"Error while editing Course",
-        error:error.message
-      })
+    // Validate `courseId`
+    if (!courseId) {
+      return res.status(400).json({
+        success: false,
+        message: "Please provide a valid course ID",
+      });
     }
-}
+
+    // Find the course in the database
+    const validCourse = await Course.findById(courseId);
+    if (!validCourse) {
+      return res.status(404).json({
+        success: false,
+        message: "Course not found",
+      });
+    }
+
+    // Update fields if present in the request
+    if (courseName) validCourse.courseName = courseName;
+    if (courseDescription) validCourse.courseDescription = courseDescription;
+    if (price) validCourse.price = price;
+    if (category) validCourse.category = category;
+    if (status) validCourse.status = status;
+    if (instructor) validCourse.instructor = instructor;
+    if (whatYouWillLearn) validCourse.whatYouWillLearn = whatYouWillLearn;
+
+    // Handle tags (ensure correct parsing)
+    if (tag) {
+      validCourse.tag = Array.isArray(tag) ? tag : JSON.parse(tag || "[]");
+    }
+
+    // Handle instructions (ensure correct parsing)
+    if (instructions) {
+      validCourse.instructions = Array.isArray(instructions)
+        ? instructions
+        : JSON.parse(instructions || "[]");
+    }
+
+    // Handle thumbnail image upload
+    if (req?.files?.courseImage) {
+      const thumbNailImage = await uploadImageToCloudinary(
+        req.files.courseImage,
+        process.env.FOLDER_NAME
+      );
+      if (thumbNailImage?.secure_url) {
+        validCourse.thumbNail = thumbNailImage.secure_url;
+      }
+    }
+
+    // Save the updated course
+    await validCourse.save();
+
+    // Respond with success
+    return res.status(200).json({
+      success: true,
+      message: "Course edited successfully",
+      data: validCourse,
+    });
+  } catch (error) {
+    console.error("Error in editing course:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Error while editing course",
+      error: error.message,
+    });
+  }
+};
