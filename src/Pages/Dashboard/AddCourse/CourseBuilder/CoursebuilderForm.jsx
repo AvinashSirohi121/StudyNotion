@@ -7,6 +7,7 @@ import {AiFillStar} from "react-icons/ai"
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { createSection } from '../../../../services/operations/sectionMethod';
 import toast from 'react-hot-toast';
+import NestedComponent from '../../../../components/Dashboard/NestedComponent';
 
 const CoursebuilderForm = () => {
 
@@ -15,6 +16,12 @@ const CoursebuilderForm = () => {
   const {validate,validateAll,setErrors,errors} = useValidation();
   const {course} = useSelector((state)=>state.course);
   const {token} = useSelector((state)=>state.auth);
+  const [openSectionId, setOpenSectionId] = useState(null);
+
+  const toggleSection = (sectionId) => {
+    setOpenSectionId((prevId) => (prevId === sectionId ? null : sectionId));
+  };
+  
   const handleChange =(e)=>{
     const {name,value} = e.target;
     const error = validate(name,value,section);
@@ -35,7 +42,7 @@ const CoursebuilderForm = () => {
       
   }
 
-  console.log("Course =>",course)
+  // console.log("Course =>",course)
 
   const addSection =async()=>{
     console.log("CurrentCourse Id=>",course._id);
@@ -81,10 +88,15 @@ const CoursebuilderForm = () => {
              onClick={()=>addSection()}
               className='h-[35px] px-2 border-2 border-yellow-50 flex items-center justify-between  bottom-0 rounded-lg text-yellow-50  z-10'>  Add Section <IoMdAddCircleOutline className='rotate-40 ml-2' /></button>
           </div>
-          <div className='mt-5 bg-richblack-800 rounded-lg p-3'>
-            {course?.courseContent?.map((co)=>(
-              // <p>{co.}</p>
-              <p>{co?.sectionName}</p>
+          <div className='mt-5 bg-richblack-800 rounded-lg px-5 p-3 flex flex-col gap-4'>
+            {course?.courseContent?.map((section,index)=>(
+              <NestedComponent 
+              key={section._id}
+              section={section}
+              openSectionId={openSectionId}
+              toggleSection={toggleSection} 
+              />
+              
             ))}
           </div>
         
