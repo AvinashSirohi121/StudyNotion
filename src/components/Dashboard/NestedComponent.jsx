@@ -3,8 +3,9 @@ import { MdEdit, MdDelete } from "react-icons/md";
 import { TiArrowSortedDown, TiArrowSortedUp } from "react-icons/ti";
 import { MdOutlineAdd } from "react-icons/md";
 import SubSectionPopup from "./SubSectionPopup";
+import { TiDocumentText } from "react-icons/ti";
 
-const NestedComponent = ({ section, openSectionId, toggleSection }) => {
+const NestedComponent = ({ section,courseId, openSectionId, toggleSection }) => {
 
   const [subSectionPopup,setsubSectionPopup]  = useState(false);
 
@@ -63,9 +64,9 @@ const NestedComponent = ({ section, openSectionId, toggleSection }) => {
                 key={subSectionId}
                 className="h-[3rem] p-2 flex justify-between items-center border-b-[1px] border-richblack-600"
               >
-                <div className="flex justify-between items-center">
-                  <div className="flex gap-2 items-center">
-                    <h2>{subSection?.subSectionName}</h2>
+                <div className="flex w-[100%] justify-between items-center">
+                  <div className="cursor-pointer flex gap-2 items-center">
+                    <h2 className="flex justify-center items-center gap-2"><TiDocumentText />{subSection?.title}</h2>
                   </div>
                   <div className="flex gap-2">
                     <MdEdit
@@ -89,7 +90,11 @@ const NestedComponent = ({ section, openSectionId, toggleSection }) => {
       )}
 
       <SubSectionPopup
+      courseId={courseId}
+      sectionId={section._id}
       isVisible={subSectionPopup}
+      onCancel={()=>setsubSectionPopup(!subSectionPopup)}
+      btn1="Save Lecture"
       />
     </div>
   );
