@@ -124,7 +124,7 @@ const CourseInformationForm = () => {
         setInstructions(updatedInstruction);
   }
 
-  const setImagepath =(Image)=>{
+  const setMediapath =(Image)=>{
     console.log("setting Image in courseInformation =<",Image)
     if(Image){
       console.log("CourseImage =>",URL.createObjectURL(Image));
@@ -397,7 +397,9 @@ const CourseInformationForm = () => {
              type="image"
              editCourse={editCourse}
              imagePath={data?.state?.thumbNail}
-             setImagepath={setImagepath}/>
+             setMediapath={setMediapath}
+             
+             />
               {errors.courseImage && <span className="text-[10px]  text-pink-1000">{errors.courseImage}</span>}
 
             <div className='flex flex-col mt-4'>
