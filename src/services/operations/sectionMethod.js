@@ -6,7 +6,7 @@ import { courseEndPoints } from "../api";
 export const createSection = async(token,data)=>{
 
     let result=[];
-    let toastId = toast.success("Creating Section ",{duration:3000})
+    let toastId = toast.loading("Creating Section ")
     try {
       console.log("Creating Section =>",data);
       let response = await apiConnector("POST",courseEndPoints.CREATE_SECTION_API,data,{
@@ -26,5 +26,5 @@ export const createSection = async(token,data)=>{
     }finally{
       toast.dismiss(toastId);
     }
-  }
+}
   
