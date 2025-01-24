@@ -8,14 +8,14 @@ require('dotenv').config();
 exports.createSubSection = async(req,res,next)=>{
     try{
         // get data
-        const {sectionId ,title,description} = req.body;
-        const vidoeFile = req?.files?.videoFile;
+        const {sectionId ,title,description,courseId} = req.body;
+        const videoFile = req?.files?.videoFile;
         //validation
-        console.log("SectionId =>",sectionId," Title =>",title," Description =>",description);
-        console.log("VideoFile =>",req.files)
-        console.log("VideoFile =>",req.files.videoFile)
-        console.log("VideoFile =>",vidoeFile)
-        if(!sectionId || !title  || !description || !vidoeFile){
+        console.log("SectionId =>",sectionId," Title =>",title," Description =>",description," CourseId =>",courseId);
+        console.log("VideoFile =>",videoFile)
+        // console.log("VideoFile =>",req.files.videoFile)
+        // console.log("VideoFile =>",vidoeFile)
+        if(!sectionId || !title  || !description || !videoFile){
             return res.status(400).json({
                 success:false,
                 message:"Please provide all details"
@@ -23,33 +23,43 @@ exports.createSubSection = async(req,res,next)=>{
         }
         // upload video to Cloudinary
         let videoDetails = await uploadImageToCloudinary(
-          vidoeFile,
+          videoFile,
           process.env.FOLDER_NAME,
 
         );
-        console.log("Video Details =>",videoDetails);
+       // console.log("Uploaded Video Details =>",videoDetails);
+        let time = videoDetails.duration;
+     
+
         // create subsection
         const subSectionDetails = await SubSection.create({
           title: title,
-          timeDuration: `${videoDetails.timeDuration}`,
+          timeDuration: `${time} sec`,
           description: description,
           videoUrl:videoDetails.secure_url
         });
-        console.log("subSectionDetails",subSectionDetails);
+       // console.log("subSectionDetails => ",subSectionDetails);
         // update Section
        // TODO populate both section and SubSection data
         let updatedSection = await Section.findByIdAndUpdate(
           { _id: sectionId },
           { $push: { subSection: subSectionDetails._id} },
           {new:true}
-        ).populate({path:"SubSection",strictPopulate: false}).exec();
+        ).populate("subSection");
         //return response
 
-        console.log("UpdatedSection ->",updatedSection);
+        let updatedCourse = await Course.findById(courseId).populate({
+          path: "courseContent", // Populating the `courseContent` field
+          populate: {
+            path: "subSection", // Populating the `subSection` field inside `courseContent`
+          },
+        }).exec();
+
+        console.log("UpdatedCourse =>",updatedCourse);
         return res.status(200).json({
           success: true,
           message: "SubSection created Successfully",
-          data: updatedSection,
+          data:updatedCourse
         });
 
 
