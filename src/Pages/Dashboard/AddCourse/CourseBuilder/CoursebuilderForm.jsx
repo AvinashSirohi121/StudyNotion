@@ -14,10 +14,11 @@ const CoursebuilderForm = () => {
   const dispatch = useDispatch();
   const [section,setSection]= useState({section:""});
   const {validate,validateAll,setErrors,errors} = useValidation();
-  const {course} = useSelector((state)=>state.course);
   const {token} = useSelector((state)=>state.auth);
   const [openSectionId, setOpenSectionId] = useState(null);
+  const {step,course, editCourse,courseCategory} = useSelector((state)=>state.course);
 
+  console.log("Course in CourseBuilder =>",course);
   const toggleSection = (sectionId) => {
     setOpenSectionId((prevId) => (prevId === sectionId ? null : sectionId));
   };
@@ -93,6 +94,7 @@ const CoursebuilderForm = () => {
               <NestedComponent 
               key={section._id}
               section={section}
+              courseId={course?._id}
               openSectionId={openSectionId}
               toggleSection={toggleSection} 
               />
