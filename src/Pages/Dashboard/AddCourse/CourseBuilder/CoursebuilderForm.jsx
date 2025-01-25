@@ -18,7 +18,7 @@ const CoursebuilderForm = () => {
   const [openSectionId, setOpenSectionId] = useState(null);
   const {step,course, editCourse,courseCategory} = useSelector((state)=>state.course);
 
-  console.log("Course in CourseBuilder =>",course);
+ // console.log("Course in CourseBuilder =>",course);
   const toggleSection = (sectionId) => {
     setOpenSectionId((prevId) => (prevId === sectionId ? null : sectionId));
   };
@@ -43,8 +43,6 @@ const CoursebuilderForm = () => {
       
   }
 
-  // console.log("Course =>",course)
-
   const addSection =async()=>{
     console.log("CurrentCourse Id=>",course._id);
     console.log("Section =>",section)
@@ -68,43 +66,44 @@ const CoursebuilderForm = () => {
         }
     }
   }
+
   return (
-    <div className='text-white'>
+    <div className='text-white w-[70%] mx-auto'>
       <div className='mt-5 bg-richblack-700 rounded-xl py-2 px-3'>
         <h2 className='text-2xl ml-3'>Course Builder</h2>
         <div className='flex-col items-end p-3'>
        
         
-          <label className='flex tracking-wider  text-sm'>Course Title <AiFillStar className='text-[5px] ml-2 text-pink-1000'/></label>
-          <div className='flex items-center gap-5'>
+          <label className='flex tracking-wider  text-sm'>Section Name <AiFillStar className='text-[5px] ml-2 text-pink-1000'/></label>
+          <div className='flex items-center justify-between lg:gap-5 md:gap-3 '>
           <input 
              name="section"
              value={section.section}
              onChange={(e)=>handleChange(e)}
-             className='h-[40px] lg:w-[80%] md:w-[70%] rounded-lg bg-richblack-800 pl-2 border-b border-richblack-400 outline-none mt-1' 
+             className='h-[40px] lg:w-[70%] md:w-[65%] rounded-lg bg-richblack-800 pl-2 border-b border-richblack-400 outline-none mt-1' 
              placeholder='Enter Section Name'/>
              {errors.section && <span className="text-[10px]  text-pink-1000">{errors.section}</span>}
 
              <button
              onClick={()=>addSection()}
-              className='h-[35px] px-2 border-2 border-yellow-50 flex items-center justify-between  bottom-0 rounded-lg text-yellow-50  z-10'>  Add Section <IoMdAddCircleOutline className='rotate-40 ml-2' /></button>
+              className='h-[35px] mt-[1px] lg:text-base  md:text-sm px-2 border-2 border-yellow-50 flex items-center justify-between  bottom-0 rounded-lg text-yellow-50  z-10'>  Add Section <IoMdAddCircleOutline  className='rotate-40 ml-2 md:hidden lg:block' /></button>
           </div>
-          <div className='mt-5 bg-richblack-800 rounded-lg px-5 p-3 flex flex-col gap-4'>
-            {course?.courseContent?.map((section,index)=>(
-              <NestedComponent 
-              key={section._id}
-              section={section}
-              courseId={course?._id}
-              openSectionId={openSectionId}
-              toggleSection={toggleSection} 
-              />
-              
+          {course?.courseContent.length > 0 && course?.courseContent?.map((section,index)=>(
+            <div className='mt-5 bg-richblack-800 rounded-lg px-5 p-3 flex flex-col gap-4'>
+            
+                <NestedComponent 
+                key={section._id}
+                section={section}
+                courseId={course?._id}
+                openSectionId={openSectionId}
+                toggleSection={toggleSection} 
+                />
+                
+            
+            </div>
             ))}
-          </div>
         
-        <div className='flex bg-richblack-500 item-end'>
        
-        </div>
        
         </div>
         
@@ -116,9 +115,9 @@ const CoursebuilderForm = () => {
                     onClick={()=>dispatch(setStep(1))}
                     className='   h-[35px] px-2 lg:mr-3 flex items-center justify-between  bottom-0 rounded-lg bg-richblack-400 text-white z-10'> <MdNavigateNext className='rotate-180' /> Back</button>                  
                   
-                  {/* <button 
-                    onClick={()=>initiateCourse()}
-                    className='lg:w-[15%]   h-[35px] px-2 lg:mr-3 flex items-center justify-between  bottom-0 rounded-lg bg-yellow-50 text-black z-10'>{editCourse ? "Save Changes" :"Next"} <MdNavigateNext /> </button>                   */}
+                  <button 
+                    onClick={()=>dispatch(setStep(3))}
+                    className='   h-[35px] px-2 lg:mr-3 flex items-center justify-between  bottom-0 rounded-lg bg-yellow-50 text-black z-10'>Next <MdNavigateNext /> </button>                  
       </div> 
     </div>
   )
