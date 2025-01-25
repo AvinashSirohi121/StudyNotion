@@ -9,7 +9,7 @@ import { AiFillStar } from 'react-icons/ai';
 import { MdNavigateNext } from "react-icons/md";
 import Tags from "../../../../components/Dashboard/Tags"
 
-import Upload from '../../../../components/common/Upload';
+import Upload2 from '../../../../components/common/Upload2';
 import {setCourse, setCourseCategory,setStep,setEditCourse} from "../../../../slices/courseSlice"
 import { createCourse,editCourses } from '../../../../services/operations/courseMethods';
 
@@ -124,7 +124,7 @@ const CourseInformationForm = () => {
         setInstructions(updatedInstruction);
   }
 
-  const setMediapath =(Image)=>{
+  const setMediaPath =(Image)=>{
     console.log("setting Image in courseInformation =<",Image)
     if(Image){
       console.log("CourseImage =>",URL.createObjectURL(Image));
@@ -222,6 +222,7 @@ const CourseInformationForm = () => {
       }
       
     }else{
+      console.log("Creating Course =>",courseData)
       // course is created for First Time
       if (courseData.courseName !=="" &&
         courseData.courseDescription !=="" &&
@@ -392,12 +393,14 @@ const CourseInformationForm = () => {
                 
                 {errors.lName && <span className="text-[10px]  text-pink-1000">{errors.lName}</span>}
             </div> */}
-            <Upload 
+            <Upload2
+              
+              
              title="Browse Image"
              type="image"
              editCourse={editCourse}
              imagePath={data?.state?.thumbNail}
-             setMediapath={setMediapath}
+             setMediaPath={setMediaPath}
              
              />
               {errors.courseImage && <span className="text-[10px]  text-pink-1000">{errors.courseImage}</span>}
