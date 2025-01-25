@@ -23,7 +23,7 @@ const AddCourse = () => {
         Add Course
       </h1>
       <div className="flex-1">
-        <RenderSteps />
+        <RenderSteps type="Add" />
       </div>
     </div>
     {/* Course Upload Tips */}
