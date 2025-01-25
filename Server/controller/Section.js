@@ -105,29 +105,38 @@ exports.updateSection = async(req,res,next)=>{
     }
 }
 
-exports.deleteSection = async(req,res)=>{
+exports.deleteSection = async(req,res,next)=>{
     try{
-        const {sectionId} = req.body;
+        const {sectionId,courseId} = req.body;
+        // const {sectionId,courseId}= req.body;
+        // console.log("Req body =>",req.body)
+
+        // console.log("SectionID =>",sectionId," CourseID =>",courseId)
         
-        if(!sectionId){
+        if(!sectionId || !courseId){
             return res.status(400).json({
                 success:false,
-                message:"Please share sectionId"
+                message:"Please share all details"
             })
         }
 
+
         await Section.findByIdAndDelete(sectionId);
+        let updatedCourseData = await Course.findById(courseId).populate({path:"courseContent",populate:{
+            path:"subSection"
+        }}).exec();
 
         return res.status(200).json({
             succes:true,
-            message:"Section Deleted successfully"
+            message:"Section Deleted successfully",
+            data:updatedCourseData
         })
 
     }catch(error){
         console.log("Error while deleting Section =>",error)
         console.log("Error while deleting Section =>",error.message)
 
-        return res.status(400).json({
+        return res.status(500).json({
             success:false,
             message:"Error while deleting Section",
             error:error.message

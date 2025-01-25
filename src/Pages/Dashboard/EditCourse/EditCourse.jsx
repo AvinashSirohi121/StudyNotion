@@ -19,7 +19,7 @@ const EditCourse = () => {
         Edit Course
       </h1>
       <div className="flex-1">
-        <RenderSteps />
+        <RenderSteps type="Edit" />
       </div>
     </div>
   )

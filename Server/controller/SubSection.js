@@ -165,21 +165,29 @@ exports.updateSubSection = async(req,res,next)=>{
 
 exports.deleteSubSection = async(req,res,next)=>{
   try {
-    const {subSectionId,sectionId} = req.body;
-    if(!subSectionId || sectionId){
+    const {subSectionId,sectionId,courseId} = req.body;
+    console.log("SubSectionId =>",subSectionId,"SectionID =>",sectionId," CourseID =>",courseId)
+    if(!subSectionId || !sectionId || !courseId){
       return res.status(400).json({
         success:false,
-        message:"Please provide subSectionDetails"
+        message:"Please provide all details"
       })
     }
 
     const updatedSection = await Section.findByIdAndUpdate({_id:sectionId},{$pull:{subSection:subSectionId}},{new:true});
     await SubSection.findByIdAndDelete({_id:subSectionId});
 
+    let updatedCourse = await Course.findById(courseId).populate({
+      path: "courseContent", 
+      populate: {
+        path: "subSection",
+      },
+    }).exec();
+
     return res.status(200).json({
       success:true,
       message:"SubSection deleted successfully",
-      data:updatedSection
+      data:updatedCourse
     })
 
   } catch (error) {
