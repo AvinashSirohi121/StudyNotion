@@ -7,10 +7,13 @@ import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import {setCourse} from "../../slices/courseSlice"
 import { createSubSection } from '../../services/operations/subSectionMethod';
+import {logout} from "../../services/operations/authMethods"
+import { useNavigate } from 'react-router-dom';
 
 const SubSectionPopup = ({courseId,sectionId,isVisible,onCancel, onConfirm,data,btn1}) => {
   const {validate,validateAll,setErrors,errors} = useValidation();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const {course} = useSelector((state)=>state.course)
   const {token} = useSelector((state)=>state.auth);
   
@@ -51,6 +54,9 @@ const SubSectionPopup = ({courseId,sectionId,isVisible,onCancel, onConfirm,data,
       
       }catch(error){
         console.log("Failed to create Lecture =>",error)
+        if(error?.response?.data?.message=="Token is invalid or expired"){
+          dispatch(logout(navigate));
+       }
       }
 
     }
