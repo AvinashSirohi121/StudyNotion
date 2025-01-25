@@ -27,4 +27,29 @@ export const createSubSection = async(token,data)=>{
       toast.dismiss(toastId);
     }
 }
+
+export const deleteSubSection = async(token,data)=>{
+
+    let result=[];
+    let toastId = toast.loading("Deleting Lecture ")
+    try {
+      //console.log("Deleting SubSection =>",data);
+      let response = await apiConnector("POST",courseEndPoints.DELETE_SUBSECTION_API,data,{
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${token}`,
+      });
+  
+            console.log("Deleting Lecture Response =>",response);
+            result=response?.data?.data;
+            return result;
+     
+      
+    } catch (error) {
+        console.log("Error in deleting Lecture =>",error)
+        toast.error(`${error?.response?.data?.message}`,{duration:3000})
+        throw error
+    }finally{
+      toast.dismiss(toastId);
+    }
+}
   
