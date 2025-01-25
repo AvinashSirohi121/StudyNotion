@@ -15,19 +15,37 @@ const Upload2 = ({ title, setMediaPath, type, editCourse, mediaPath }) => {
     mediaRef.current.click();
   };
 
+  const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5 MB in bytes
+  const MAX_VIDEO_SIZE = 100 * 1024 * 1024; // 100 MB in bytes
+
   const mediaUploadHandle = (e) => {
     const file = e.target.files && e.target.files[0];
-    //console.log("File =>", file, " FileType =>", file?.type);
 
-    if (file && ((type === "image" && file.type.startsWith("image/")) || (type === "video" && file.type.startsWith("video/")))) {
-      setMedia(file);
-      setMediaPath(file); // Store the file in mediaPath
-      setIsMediaSelected(true);
-      setIsEdit(false); // Set isEdit to false when selecting new media
-    } else {
-      toast.error(`Selected file is not a valid ${type}.`, { duration: 3000 });
+    if (file) {
+      const isImage = type === "image" && file.type.startsWith("image/");
+      const isVideo = type === "video" && file.type.startsWith("video/");
+      const isValidSize =
+        (isImage && file.size <= MAX_IMAGE_SIZE) ||
+        (isVideo && file.size <= MAX_VIDEO_SIZE);
+
+      if ((isImage || isVideo) && isValidSize) {
+        setMedia(file);
+        setMediaPath(file); // Store the file in mediaPath
+        setIsMediaSelected(true);
+        setIsEdit(false); // Set isEdit to false when selecting new media
+      } else if (!isValidSize) {
+        toast.error(
+          `Selected ${type} exceeds the maximum allowed size of ${
+            type === "image" ? "5MB" : "100MB"
+          }.`,
+          { duration: 3000 }
+        );
+      } else {
+        toast.error(`Selected file is not a valid ${type}.`, { duration: 3000 });
+      }
     }
   };
+
 
   const removeMedia = (e) => {
     e.stopPropagation();
@@ -89,6 +107,7 @@ const Upload2 = ({ title, setMediaPath, type, editCourse, mediaPath }) => {
                 <>
                   <p>• Aspect ratio 16:9</p>
                   <p>• Recommended size 1024x576</p>
+                  <p>• Maximum size: 5MB</p>
                 </>
               )}
               {type === "video" && (
