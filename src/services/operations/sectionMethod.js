@@ -27,6 +27,30 @@ export const createSection = async(token,data)=>{
       toast.dismiss(toastId);
     }
 }
+export const editSection = async(token,data)=>{
+
+    let result=[];
+    let toastId = toast.loading("Editing Section")
+    try {
+      //console.log("Editing Section =>",data);
+      let response = await apiConnector("POST",courseEndPoints.UPDATE_SECTION_API,data,{
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${token}`,
+      });
+  
+            console.log("Editing Section Response =>",response);
+            result=response?.data?.data;
+            return result;
+     
+      
+    } catch (error) {
+        console.log("Error in editing section =>",error)
+        toast.error(`${error?.response?.data?.message}`,{duration:3000})
+        throw error
+    }finally{
+      toast.dismiss(toastId);
+    }
+}
   
 
 export const deleteSection = async(token,data)=>{
