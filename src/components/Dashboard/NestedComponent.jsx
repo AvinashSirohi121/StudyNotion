@@ -13,22 +13,38 @@ import { deleteSubSection } from "../../services/operations/subSectionMethod";
 import { setCourse } from "../../slices/courseSlice";
 import toast from "react-hot-toast";
 
-const NestedComponent = ({ section, courseId, openSectionId, toggleSection }) => {
+const NestedComponent = ({ section, courseId, openSectionId, toggleSection,editSections }) => {
   const {token} = useSelector((state)=>state.auth)
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [subSectionPopup, setSubSectionPopup] = useState(false);
   const [popupConfig, setPopupConfig] = useState({ isVisible: false, context: "", id: null });
+  const [editSubSectionData,setEditSubSectionData] = useState({});
+  const [editSubSection,setEditSubSection] = useState(false);
 
-  const handleEditSection = () => console.log("Edit section:", section._id);
+  const handleEditSection = () =>{
+    console.log("Edit section Data =>", section);
+    editSections(section)
+
+  } 
 
   const handleDeleteSection = () => setPopupConfig({ isVisible: true, context: "section", id: section._id });
 
-  const handleEditSubSection = (id) => console.log("Edit subsection:", id);
+  const handleEditSubSection = (subSectionData) => {
+    console.log("Edit subsection =>", subSectionData);
+    setEditSubSection(true)
+    setSubSectionPopup(true);
+    setEditSubSectionData(subSectionData)
+    
+  };
 
-  const handleDeleteSubSection = (id) => setPopupConfig({ isVisible: true, context: "subsection", id });
+  const handleDeleteSubSection = (id) =>{
+     setPopupConfig({ isVisible: true, context: "subsection", id })
+  }
 
-  const handleAddSubSection = () => setSubSectionPopup(true);
+  const handleAddSubSection = () => {
+    setSubSectionPopup(true)
+  }
 
   const confirmDelete = () => {
     const { context, id } = popupConfig;
@@ -66,6 +82,7 @@ const NestedComponent = ({ section, courseId, openSectionId, toggleSection }) =>
          }
       }
   }
+
   const deleteSubSections =async (subSectionId)=>{
     let formData = new FormData();
     
@@ -89,6 +106,8 @@ const NestedComponent = ({ section, courseId, openSectionId, toggleSection }) =>
          }
       }
   }
+
+  
   return (
     <div>
       {/* Section Part */}
@@ -129,11 +148,11 @@ const NestedComponent = ({ section, courseId, openSectionId, toggleSection }) =>
                   <div className="flex gap-2">
                     <MdEdit
                       className="hover:text-yellow-50"
-                      onClick={() => handleEditSubSection(subSection._id)}
+                      onClick={() => handleEditSubSection(subSection)}
                     />
                     <MdDelete
                       className="hover:text-pink-1000"
-                      onClick={() => handleDeleteSubSection(subSection._id)}
+                      onClick={() => handleDeleteSubSection(subSection)}
                     />
                   </div>
                 </div>
@@ -153,8 +172,15 @@ const NestedComponent = ({ section, courseId, openSectionId, toggleSection }) =>
         courseId={courseId}
         sectionId={section._id}
         isVisible={subSectionPopup}
-        onCancel={() => setSubSectionPopup(false)}
-        btn1="Save Lecture"
+        editSubSectionData={editSubSectionData}
+        editSubSection={editSubSection}
+        setEditSubSection={setEditSubSection}
+        onCancel={() => {
+          setSubSectionPopup(false); // Close popup
+          setEditSubSection(false); // Reset edit mode
+        }}
+        btn1={editSubSection ? "Update Lecture" : "Save Lecture"} // Change button label based on mode
+      
       />
 
       {/* Reusable Popup */}
