@@ -68,28 +68,57 @@ exports.createSection = async(req,res,next)=>{
 exports.updateSection = async(req,res,next)=>{
     try{
         // getData
-        const {sectionName,sectionId}= req.body;
-        console.log("SectionId =>",sectionId," sectionName =>",sectionName);
-        if(!sectionName || !sectionId){
+        const {sectionName,sectionId,courseId}= req.body;
+        console.log("SectionId =>",sectionId," sectionName =>",sectionName," courseId => ",courseId);
+        if(!sectionName || !sectionId || !courseId){
             return res.status(500).json({
                 succes:false,
                 message:"Please provide All details",
             })
         }
         //update Section
-        const updatedSection = await Section.findByIdAndUpdate(
-            sectionId,
-            { sectionName: sectionName },
-            { new: true }
-          ).populate("subSection")  // This matches the field in the schema
-          .exec();
-          
-          
+        // Update the section
+    const updatedSection = await Section.findByIdAndUpdate(
+        sectionId,
+        { sectionName: sectionName },
+        { new: true } // Return the updated document
+      )
+        .populate("subSection") // Populate subSection if needed
+        .exec();
+  
+      if (!updatedSection) {
+        return res.status(404).json({
+          success: false,
+          message: "Section not found",
+        });
+      }
+  
+      console.log("Updated Section =>>", updatedSection);
+  
+      // Ensure course content references the updated section without duplication
+      const updatedCourseDetails = await Course.findOneAndUpdate(
+        { _id: courseId, "courseContent": sectionId }, // Ensure the section already exists in courseContent
+        { $set: { "courseContent.$": updatedSection._id } }, // Update the matching section in the array
+        { new: true } // Return the updated course document
+      )
+        .populate({
+          path: "courseContent",
+          populate: { path: "subSection" },
+        })
+        .exec();
+  
+      if (!updatedCourseDetails) {
+        return res.status(404).json({
+          success: false,
+          message: "Course not found or section not part of the course",
+        });
+      }
+     
        
         return res.status(200).json({
             success:true,
             message:"Section updated successfully",
-            data:updatedSection
+            data:updatedCourseDetails
         })
 
 
