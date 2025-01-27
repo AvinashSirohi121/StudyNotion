@@ -42,23 +42,23 @@ const CourseInformationForm = () => {
       // Update courseData with values from data, if present
       setCourseData((prevState) => {
         const categoryId = data?.category[0];
-        const categoryName = courseCategory.find((cat) => cat._id === categoryId)?.name || prevState.category;
+        //const categoryName = courseCategory.find((cat) => cat._id === categoryId)?.name || prevState.category;
          //console.log("data",data)
         // console.log("data?.courseImage =>",data?.thumbNail," prevState.courseImage =>",prevState.courseImage, prevState.thumbNail )
-      return {
-        ...prevState,
-        courseName: data?.courseName || prevState.courseName,
-        courseDescription: data?.courseDescription || prevState.courseDescription,
-        price: data?.price || prevState.price,
-        tag: data?.tag || prevState.tag,
-        whatYouWillLearn: data?.whatYouWillLearn || prevState.whatYouWillLearn,
-        category: categoryId || prevState.category ,
-        status: data?.status || prevState.status,
-        instructor: data?.instructor || prevState.instructor,
-        instructions: data?.instructions || prevState.instructions,
-        courseImage: data?.thumbNail || prevState.courseImage,
-      }
-    });
+        return {
+          ...prevState,
+          courseName: data?.courseName || prevState.courseName,
+          courseDescription: data?.courseDescription || prevState.courseDescription,
+          price: data?.price || prevState.price,
+          tag: data?.tag || prevState.tag,
+          whatYouWillLearn: data?.whatYouWillLearn || prevState.whatYouWillLearn,
+          category: categoryId || prevState.category ,
+          status: data?.status || prevState.status,
+          instructor: data?.instructor || prevState.instructor,
+          instructions: data?.instructions || prevState.instructions,
+          courseImage: data?.thumbNail || prevState.courseImage,
+        }
+      });
       setInstructions(data?.instructions)
     };
     
@@ -151,13 +151,14 @@ const CourseInformationForm = () => {
     }
     return false
   }
+
   const initiateCourse =async()=>{
     // console.log("Edit Course =>",editCourse," Step =>",step)
-     console.log("Course from Redux =>",course)
+    //  console.log("Course from Redux =>",course)
     let formData = new FormData();
     if(editCourse){
       // console.log("Calling befor Saving edited course");
-      // console.log("CourseData =>",courseData);
+       console.log("Edited CourseData =>",courseData);
       let IfCourseEdited = checkIfCourseEdited();
       console.log("Is Course Edited =>",IfCourseEdited);
 
@@ -299,7 +300,7 @@ const CourseInformationForm = () => {
 
 
   return (
-    <div className='text-white'>
+    <div className='text-white w-[70%] mx-auto'>
         <div className='w-full bg-richblack-700 border-richblack-300 rounded-md px-4 p-3'>
             <div className='flex flex-col'>
               <label className='flex tracking-wider  text-sm'>Course Title <AiFillStar className='text-[5px] ml-2 text-pink-1000'/></label>
@@ -393,13 +394,11 @@ const CourseInformationForm = () => {
                 
                 {errors.lName && <span className="text-[10px]  text-pink-1000">{errors.lName}</span>}
             </div> */}
-            <Upload2
-              
-              
+            <Upload2              
              title="Browse Image"
              type="image"
              editCourse={editCourse}
-             imagePath={data?.state?.thumbNail}
+             mediaPath={data?.state?.thumbNail}
              setMediaPath={setMediaPath}
              
              />
