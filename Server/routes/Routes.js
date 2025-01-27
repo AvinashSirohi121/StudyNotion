@@ -49,11 +49,11 @@ router.post("/course/deleteCourse",auth,isInstructor,deleteCourse);
 router.post("/course/editCourse",auth,isInstructor,editCourse);
 router.get ("/course/getInstructorCourse",auth,isInstructor,getInstructorCourse);
 router.post("/course/addSection",auth,isInstructor,createSection);
-router.patch("/course/updateSection",auth,isInstructor,updateSection);
+router.post("/course/updateSection",auth,isInstructor,updateSection);
 router.post("/course/deleteSection",auth,isInstructor,deleteSection);
 router.post("/course/addSubSection",auth, isInstructor,createSubSection);
 router.post("/course/deleteSubSection",auth, isInstructor,deleteSubSection);
-router.patch("/course/updateSubSection",auth,isInstructor,updateSubSection);
+router.post("/course/updateSubSection",auth,isInstructor,updateSubSection);
 
 
 // Course Routes to get Course Details (Can be used by Anyone)
