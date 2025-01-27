@@ -117,38 +117,131 @@ exports.getAllSubSection = async(req,res,next)=>{
 
 exports.updateSubSection = async(req,res,next)=>{
   try {
-    const {subSectionId , title, timeDuration, description, videoUrl} = req.body;
-    if(!subSectionId || !title || !timeDuration || !description){
+    const {courseId, sectionId, subSectionId , title, duration, description, videoUrl} = req.body;
+    console.log("CourseID =>",courseId)
+    console.log("sectionId=>",sectionId)
+    console.log("subSectionId =>",subSectionId)
+    console.log("title =>",title)
+    console.log("duration =>",duration)
+    console.log("description =>",description)
+    console.log("videoUrl =>",videoUrl)
+    if(!subSectionId || !title || !duration || !description){
       return res.status(400).json({
         success:false,
         message:"Please provide all details"
       })
     }
+    let uploadedVideo;
 
     if(!videoUrl){
-      videoUrl = req.files.video;
+      let video = req.files.video;
+      console.log("VideoURL =>",video);
+      uploadedVideo = await uploadImageToCloudinary(video,process.env.FOLDER_NAME)
+      console.log("Uploaded Video => ",uploadedVideo);
     }
-    console.log("VideoURL =>",videoUrl);
+   
 
-    let uploadVideo = await uploadImageToCloudinary(videoUrl,process.env.FOLDER_NAME)
-    console.log("Uploaded Video => ",uploadVideo);
+   
     let updatedSubSectionDetails = await SubSection.findByIdAndUpdate(
       { _id: subSectionId },
       {
         title: title,
-        timeDuration: `${uploadVideo.timeDuration}`,
+        timeDuration: duration ? duration : `${uploadedVideo.timeDuration} sec` ,
         description: description,
-        videoUrl: uploadVideo.secure_url,
+        videoUrl: videoUrl ? videoUrl : uploadedVideo.secure_url,
       },
       {new:true}
-    );
+    ).exec();
 
+    if (!updatedSubSectionDetails) {
+      return res.status(404).json({
+        success: false,
+        message: "Subsection not found",
+      });
+    }
     console.log("updatedSubSectionDetails =>", updatedSubSectionDetails);
 
+
+    // const updatedCourseDetail = await Course.findOneAndUpdate(
+    //   { _id: courseId, "courseContent": sectionId }, // Match the sectionId within courseContent
+    //   {
+    //     $set: {
+    //       "courseContent.$.subSection": // Update the subSection array
+    //         // Replace the ObjectId with the updated SubSection
+    //         updatedSubSectionDetails._id,
+    //     },
+    //   },
+    //   { new: true } // Return the updated course document
+    // ).populate({
+    //     path: "courseContent",
+    //     populate: { path: "subSection" }, // Populate the subSection field to get the details
+    //   }).exec();
+
+     
+
+
+    // const updatedCourseDetail = await Course.findOneAndUpdate(
+    //   { _id: courseId, "courseContent.subSection": sectionId },
+    //   {$set: {
+    //       "courseContent.$.subSection": updatedSubSectionDetails._id, // Modify the subSection array element
+    //     }},
+    //   {new: true }
+    // ).populate({
+    //     path: "courseContent",
+    //     populate: { path: "subSection" },
+    //   }).exec();
+
+    // const updatedCourseDetail = await Course.findOneAndUpdate(
+    //   { 
+    //     _id: courseId,
+    //     "courseContent.subSection": { $elemMatch: { $eq: subSectionId } },
+    //   },
+    //   {
+    //     $set: {
+    //       "courseContent.$.subSection.$[elem]": updatedSubSectionDetails._id,
+    //     },
+    //   },
+    //   {
+    //     new: true,
+    //     arrayFilters: [{ "elem": subSectionId }],
+    //   }
+    // )
+    //   .populate({
+    //     path: "courseContent",
+    //     populate: { path: "subSection" },
+    //   })
+    //   .exec();
+
+    const a = await Course.findById(courseId)
+    .populate({
+      path: 'courseContent', // Populate the `courseContent` array
+      populate: { 
+        path: 'subSection', // For each section, populate the `subSection` array
+        model: 'SubSection'
+      }
+    })
+    .exec();
+    console.log("A =>",a)
+    const updatedCourseDetail = await Course.findOneAndUpdate(
+      { _id: courseId, "courseContent._id": sectionId },
+      { $set: { "courseContent.$.subSection": [updatedSubSectionDetails._id] } },
+      { new: true }
+    )
+    .populate({
+      path: "courseContent.subSection",
+      model: "SubSection"
+    })
+    .exec();
+
+    console.log("updatedCourseDetail =>", updatedCourseDetail);
+    
+    
+
+      console.log("updatedCourseDetail  =>",updatedCourseDetail )
     return res.status(200).json({
       success: true,
       message: "SubSection updated successfully",
-      data: updatedSubSectionDetails,
+      data:a ,
     });
 
   } catch (error) {
